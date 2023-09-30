@@ -51,7 +51,6 @@ setup(
             ),
             include_dirs=[GetPybindInclude(), "./"],
             language="c++",
-            extra_compile_args=["/std:c++17"],
         )
     ],
     setup_requires=["pybind11>=2.5.0"],
