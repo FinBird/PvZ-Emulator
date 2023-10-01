@@ -1,79 +1,60 @@
 # PvZ-Emulator
-Plants vs. Zombies Survival Endless emulator.
 
-This emulator can emulate all kinds of plants and zombies except Dr. Zomboss
-and Zombie Bobsled Team (They don't occur in Survival Endless). It supports
-all 6 scenes (Day, Night, Pool, Fog, Roof, and Moon Night).
+更多说明请看[原 repo](https://github.com/dnartz/PvZ-Emulator).
 
-### Install
-To build the Python module with CMake, add flags `-DPVZEMU_BUILD_PYBIND=True -DPYBIND11_PYTHON_VERSION=3.8` to your CMake build command.
+## 快速开始
 
-You can install through `pip` as well:
-```shell script
-python -m pip install git+https://github.com/dnartz/PvZ-Emulator
-```
+使用 [PvZ Emulator 的最小可复现用例](https://github.com/Rottenham/min-pvz-emulator).
 
-## Usage
-This emulator can be used as a static library or a python module. Include
-`pvz-emulator/world.h` before to your source code. All functions and methods
-are thread-safe.
+该仓库里包含了已经编译好的 `libpvzemu.a`, 因此开箱即用, 局限在于无法修改源码.
 
-### Create and Update a Game Instance
-```cpp
-int main(void) {
-    pvz_emulator::world w(pvz_emulator::object::scene_type::pool);
+## 从头编译
 
-    // The first wave of zombies will spawn after 6 seconds.
-    for (int i = 0; i < 600; i++) {
-        w.update();
-    }
+默认你已经:
+- 安装 Cmake 和 Ninja
+- 新建了一个目录并 cd 进去
 
-    return 0;
-}
-```
+目前经测试可用的编译方式：
 
-```python
-from pvzemu import World, SceneType
-
-w = World(SceneType.pool)
-for i in range(0, 600):
-    w.update()
-```
-
-### Control Flags
-You can set some bool flags in the `scene` objects to enable or disable some
-easter eggs and bugs that affect motions of objects.
-* `is_zombie_dance` Enable the "dance" effect if set to `true`.
-* `is_future_enalbed` Enable the "future" effect if set to `true`.
-* `stop_spawn` Stop spawning zombies if set to `true`.
-* `enable_split_pea_bug` Enable the "future" effect if set to `true`.
-
-## Debugging
-I wrote a simple web debugger to visualize the game state. To compile the
-debugger, you need to [install node.js](https://nodejs.org/en/download/) and
-[extract](https://plantsvszombies.fandom.com/wiki/Modify_Plants_vs._Zombies)
-some images from `main.pak` in the game installation directory.
-
-After unpacked `main.pak`, copy these files to `debugger/src/assets`:
+编译为 c++静态库：
 ```console
-$ cd images
-$ cp background1.jpg PATH_TO_THE_SOURCE_CODE/debugger/src/assets/day.jpg
-$ cp background2.jpg PATH_TO_THE_SOURCE_CODE/debugger/src/assets/night.jpg
-$ cp background3.jpg PATH_TO_THE_SOURCE_CODE/debugger/src/assets/pool.jpg
-$ cp background4.jpg PATH_TO_THE_SOURCE_CODE/debugger/src/assets/fog.jpg
-$ cp background5.jpg PATH_TO_THE_SOURCE_CODE/debugger/src/assets/roof.jpg
-$ cp background6.jpg PATH_TO_THE_SOURCE_CODE/debugger/src/assets/moon_night.jpg
+cmake -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
+ninja
 ```
 
-Then you can build the debug server:
+使用 pip install 作为 python 模块安装：
 ```console
-$ cmake PATH_TO_THE_SOURCE_CODE -DPVZEMU_BUILD_DEBUGGER=True
-$ make
+python -m pip install git+https://github.com/Rottenham/PvZ-Emulator
 ```
 
-Run the debug server:
+可行但是比较麻烦的编译方式：
+
+编译 debug server:
 ```console
-$ ./debug-server PATH_TO_THE_SOURCE_CODE/debugger/dist
+cmake -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo -DPVZEMU_BUILD_DEBUGGER=True ..
+ninja
 ```
 
-Now you can Open http://localhost:3000 on your browser.
+麻烦的原因在于要将各种 `main.pak` 里的资源文件拖出来，并且还要用 **旧版本** 的 Node.js. 得到的结果是一个能看到僵尸攻击域/防御域的可视化网页. 
+
+然而, 这个只能用来调试, 跑模拟的话速度并不快, 所以个人认为没有太大用处(且编译还很麻烦).
+
+不可用的编译方式：
+
+编译 python 静态库：
+```console
+cmake -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo -DPVZEMU_BUILD_PYBIND=True -DPYBIND11_PYTHON_VERSION=3.8 ..
+ninja
+```
+
+尝试各种方法都并没有成功(
+
+最后一步爆各种 linker error (当然, 要走到这一步也需要改3~4个地方), 整不明白.
+
+## 说明
+
+不知为何, python 模块里并没有 `pybind` 任何输出函数. 也就是虽然 python 模块能用, 但是读取不出任何数据(wtf). 解决方法未知.
+
+C++ 版使用正常. 源代码有无 bug 未知, 待进一步验证.
+
+据 testla 本人说, 源码都是反汇编扒下来的. 但肯定有简化过的地方, 比如出怪选行明显就简化过, 不如出怪选行论里介绍的那样复杂.
