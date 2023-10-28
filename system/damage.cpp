@@ -34,7 +34,7 @@ bool damage::can_be_attacked(const zombie& z, unsigned char flags) {
         return false;
     }
 
-    if (z.status == zombie_status::pole_valuting_jumpping ||
+    if (z.status == zombie_status::pole_vaulting_jumping ||
         z.status == zombie_status::imp_flying ||
         z.status == zombie_status::digger_drill ||
         z.status == zombie_status::digger_lost_dig ||
@@ -102,7 +102,7 @@ void damage::set_is_eating(object::zombie& z) {
         reanim.set(z, zombie_reanim_name::anim_laddereat, reanim_type::repeat, 0);
     } else if (z.status == zombie_status::newspaper_running) {
         reanim.set(z, zombie_reanim_name::anim_eat_nopaper, reanim_type::repeat, 0);
-    } else if (z.status != zombie_status::pole_valuting_running) {
+    } else if (z.status != zombie_status::pole_vaulting_running) {
         reanim.set(z, zombie_reanim_name::anim_eat, reanim_type::repeat, 0);
     }
 }
@@ -223,7 +223,7 @@ void damage::destroy_accessory_2(zombie& z) {
             z.time_since_ate_garlic = 0;
         }
 
-        z.status = zombie_status::newspaper_destoryed;
+        z.status = zombie_status::newspaper_destroyed;
         reanim.set(z, zombie_reanim_name::anim_gasp, reanim_type::once, 8);
 
         break;
@@ -311,7 +311,7 @@ void damage::take_ash_attack(zombie& z) {
 
     if (z.status != zombie_status::dying &&
         z.status != zombie_status::dying_from_lawnmower &&
-        z.status != zombie_status::pole_valuting_jumpping &&
+        z.status != zombie_status::pole_vaulting_jumping &&
         z.status != zombie_status::imp_flying &&
         z.status != zombie_status::rising_from_ground &&
         z.status != zombie_status::backup_spawning &&

@@ -60,7 +60,7 @@ bool zombie::can_be_freezed() const {
         return false;
     }
 
-    return status != zombie_status::pole_valuting_jumpping &&
+    return status != zombie_status::pole_vaulting_jumping &&
         status != zombie_status::dophin_jump_in_pool &&
         status != zombie_status::dophin_jump &&
         status != zombie_status::snorkel_jump_in_the_pool &&
@@ -79,7 +79,7 @@ void zombie::get_attack_box(rect& rect) const {
     rect.width = attack_box.width;
     rect.height = attack_box.height;
 
-    if (status == zombie_status::pole_valuting_jumpping ||
+    if (status == zombie_status::pole_vaulting_jumping ||
         status == zombie_status::dophin_jump)
     {
         rect.x = -40;
@@ -412,10 +412,10 @@ const char* zombie::status_to_string(zombie_status status) {
     case zombie_status::bungee_grab: return "bungee_grab";
     case zombie_status::bungee_raise: return "bungee_raise";
     case zombie_status::bungee_idle: return "bungee_idle";
-    case zombie_status::pole_valuting_running: 
-        return "pole_valuting_running";
-    case zombie_status::pole_valuting_jumpping:
-        return "pole_valuting_jumpping";
+    case zombie_status::pole_vaulting_running: 
+        return "pole_vaulting_running";
+    case zombie_status::pole_vaulting_jumping:
+        return "pole_vaulting_jumping";
     case zombie_status::pole_vaulting_walking:
         return "pole_vaulting_walking";
     case zombie_status::rising_from_ground: return "rising_from_ground";
@@ -426,7 +426,7 @@ const char* zombie::status_to_string(zombie_status status) {
         return "pogo_idle_before_target";
     case zombie_status::pogo_jump_across: return "pogo_jump_across";
     case zombie_status::newspaper_walking: return "newspaper_walking";
-    case zombie_status::newspaper_destoryed: return "newspaper_destoryed";
+    case zombie_status::newspaper_destroyed: return "newspaper_destroyed";
     case zombie_status::newspaper_running: return "newspaper_running";
     case zombie_status::digger_dig: return "digger_dig";
     case zombie_status::digger_drill: return "digger_drill";

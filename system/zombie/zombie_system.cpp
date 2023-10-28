@@ -106,7 +106,7 @@ void zombie_system::update_eating_plants(zombie& z, plant &p) {
 }
 
 void zombie_system::update_blocked_by_tallnut_or_fall_from_ladder(zombie &z) {
-    z.dy -= z.status == zombie_status::pole_valuting_running ? 2 : 1;
+    z.dy -= z.status == zombie_status::pole_vaulting_running ? 2 : 1;
 
     if (z.dy <= 0) {
         z.dy = 0;
@@ -154,7 +154,7 @@ void zombie_system::update_x(zombie& z) {
     } else if (z.type == zombie_type::zomboni ||
         z.status == zombie_status::digger_dig ||
         z.status == zombie_status::dophin_jump ||
-        z.status == zombie_status::pole_valuting_jumpping ||
+        z.status == zombie_status::pole_vaulting_jumping ||
         z.status == zombie_status::snorkel_jump_in_the_pool)
     {
         dx = z.dx;
@@ -351,7 +351,7 @@ void zombie_system::set_garlic_and_hypno_status(zombie& z) {
 
 void zombie_system::update_garlic_and_hypno_effect(zombie& z) {
     if (z.status == zombie_status::jackbox_pop ||
-        z.status == zombie_status::newspaper_destoryed ||
+        z.status == zombie_status::newspaper_destroyed ||
         z.status == zombie_status::digger_drill ||
         z.status == zombie_status::digger_lost_dig ||
         z.status == zombie_status::digger_landing ||
@@ -461,7 +461,7 @@ void zombie_system::update_action_in_pool(zombie& z) {
 void zombie_system::update_falling(zombie& z) {
     z.dy -= 1;
 
-    if (z.status == zombie_status::pole_valuting_running) {
+    if (z.status == zombie_status::pole_vaulting_running) {
         z.dy -= 1;
     }
 
@@ -626,8 +626,8 @@ void zombie_system::update_eating(object::zombie& z) {
         z.type != zombie_type::zomboni &&
         z.type != zombie_type::catapult &&
         !z.has_pogo_status() &&
-        z.status != zombie_status::pole_valuting_jumpping &&
-        z.status != zombie_status::newspaper_destoryed &&
+        z.status != zombie_status::pole_vaulting_jumping &&
+        z.status != zombie_status::newspaper_destroyed &&
         z.status != zombie_status::digger_drill &&
         z.status != zombie_status::digger_lost_dig &&
         z.status != zombie_status::digger_landing &&

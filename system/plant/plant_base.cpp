@@ -152,8 +152,8 @@ zombie* plant_base::find_target(plant& p, unsigned int row, bool is_alt_attack) 
             }
         } else if (p.type == plant_type::potato_mine) {
             if (z.type == zombie_type::pogo && z.has_item_or_walk_left ||
-                z.status == zombie_status::pole_valuting_jumpping ||
-                z.status == zombie_status::pole_valuting_running)
+                z.status == zombie_status::pole_vaulting_jumping ||
+                z.status == zombie_status::pole_vaulting_running)
             {
                 continue;
             }
@@ -172,7 +172,7 @@ zombie* plant_base::find_target(plant& p, unsigned int row, bool is_alt_attack) 
             }
         }
 
-        if (z.status != zombie_status::pole_valuting_jumpping &&
+        if (z.status != zombie_status::pole_vaulting_jumping &&
             (p.type != plant_type::tangle_kelp || z.is_in_water))
         {
             rect zr;

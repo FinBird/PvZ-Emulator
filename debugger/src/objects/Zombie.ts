@@ -39,8 +39,8 @@ export type ZombieStatus =
     "bungee_grab" |
     "bungee_raise" |
     "bungee_idle" |
-    "pole_valuting_running" |
-    "pole_valuting_jumpping" |
+    "pole_vaulting_running" |
+    "pole_vaulting_jumping" |
     "pole_vaulting_walking" |
     "rising_from_ground" |
     "jackbox_walking" |
@@ -49,7 +49,7 @@ export type ZombieStatus =
     "pogo_idle_before_target" |
     "pogo_jump_across" |
     "newspaper_walking" |
-    "newspaper_destoryed" |
+    "newspaper_destroyed" |
     "newspaper_running" |
     "digger_dig" |
     "digger_drill" |

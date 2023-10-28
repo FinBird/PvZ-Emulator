@@ -6,11 +6,11 @@ namespace pvz_emulator::system {
 using namespace pvz_emulator::object;
 
 void zombie_pole_vaulting::update(zombie &z) {
-    if (z.status != zombie_status::pole_valuting_running ||
+    if (z.status != zombie_status::pole_vaulting_running ||
         !z.is_not_dying ||
         z.action != zombie_action::none)
     {
-        if (z.status != zombie_status::pole_valuting_jumpping) {
+        if (z.status != zombie_status::pole_vaulting_jumping) {
             return;
         }
 
@@ -70,7 +70,7 @@ void zombie_pole_vaulting::update(zombie &z) {
             }
         }
 
-        z.status = zombie_status::pole_valuting_jumpping;
+        z.status = zombie_status::pole_vaulting_jumping;
         reanim.set(z, zombie_reanim_name::anim_jump, reanim_type::once, 24);
         z.has_item_or_walk_left = false;
         z.dx = static_cast<float>(
@@ -89,7 +89,7 @@ void zombie_pole_vaulting::init(zombie &z, unsigned int row) {
     z.garlic_tick.a = 6;
 
     z.hp = 500;
-    z.status = zombie_status::pole_valuting_running;
+    z.status = zombie_status::pole_vaulting_running;
     z.has_item_or_walk_left = true;
 
     z.attack_box.x = -29;

@@ -15,7 +15,7 @@ void plant_cob_cannon::update(plant& p) {
 
     case plant_status::cob_cannon_charge:
         if (p.reanim.n_repeated > 0) {
-            p.status = plant_status::cob_cannon_aramed_idle;
+            p.status = plant_status::cob_cannon_armed_idle;
             p.set_reanim(plant_reanim_name::anim_idle, reanim_type::repeat, 12);
         }
         break;
@@ -26,7 +26,7 @@ void plant_cob_cannon::update(plant& p) {
 }
 
 bool plant_cob_cannon::launch(plant& p, int x, int y) {
-    if (p.status != plant_status::cob_cannon_aramed_idle) {
+    if (p.status != plant_status::cob_cannon_armed_idle) {
         return false;
     }
 

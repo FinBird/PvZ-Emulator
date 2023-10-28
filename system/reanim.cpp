@@ -41,7 +41,7 @@ void reanim::update_dx(object::zombie& z, bool do_update_fps) {
     {
         z.dx = 0.44999999f;
     } else if (z.status == zombie_status::digger_dig ||
-        z.status == zombie_status::pole_valuting_running ||
+        z.status == zombie_status::pole_vaulting_running ||
         z.type == zombie_type::football ||
         z.type == zombie_type::snorkel ||
         z.type == zombie_type::jack_in_the_box)
