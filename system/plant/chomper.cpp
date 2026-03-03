@@ -8,7 +8,7 @@ using namespace pvz_emulator::object;
 void plant_chomper::update(plant& p) {
 	switch (p.status) {
 	case plant_status::wait:
-		if (find_target(p, p.row, false)) {
+		if (find_target(p, p.row, false) != nullptr) {
 			p.reanim.fps = 24;
 			p.reanim.type = reanim_type::once;
 			p.reanim.n_repeated = 0;
@@ -23,9 +23,9 @@ void plant_chomper::update(plant& p) {
 			return;
 		}
 
-		auto z = find_target(p, p.row, false);
+		auto *z = find_target(p, p.row, false);
 
-		bool cannot_swallow = z &&
+		bool cannot_swallow = (z != nullptr) &&
 			(z->type == zombie_type::gargantuar ||
 			z->type == zombie_type::giga_gargantuar);
 
