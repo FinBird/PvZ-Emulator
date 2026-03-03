@@ -343,7 +343,8 @@ void sun_plant_base::produce_sun(object::plant & p) {
                 sun.add_sun(25);
             }
         } else if (p.type == plant_type::twin_sunflower) {
-            sun.add_sun(50);
+            sun.add_sun(25);
+            sun.add_sun(25);
         } else if (p.type == plant_type::sunflower) {
             sun.add_sun(25);
         }
