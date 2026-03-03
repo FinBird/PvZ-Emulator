@@ -243,16 +243,6 @@ bool plant_factory::can_plant(
             status.content->hp < 2 * 8000 / 3 &&
             status.content->edible != plant_edible_status::invisible_and_edible;
 
-    default:
-        if (status.content != nullptr) {
-            return false;
-        }
-    }
-
-    switch (target_type) {
-    case plant_type::potato_mine:
-        return !is_water_row;
-
     case plant_type::gatling_pea:
     case plant_type::twin_sunflower:
     case plant_type::gloomshroom:
@@ -260,11 +250,16 @@ bool plant_factory::can_plant(
     case plant_type::winter_melon:
     case plant_type::gold_magnet:
     case plant_type::cob_cannon:
+    case plant_type::spikerock:
         return can_plant_advanced_plant(status, target_type);
 
     default:
-        return true;
+        if (status.content != nullptr) {
+            return false;
+        }
     }
+
+    return true;
 }
 
 plant& plant_factory::create(

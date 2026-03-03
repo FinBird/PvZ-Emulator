@@ -144,7 +144,7 @@ bool projectile_system::is_covered_by_suppter(
     }
 
     rect splash_range;
-    int splash_radius = (proj.type == projectile_type::fire_pea) ? 40 : 50;
+    int splash_radius = (proj.type == projectile_type::fire_pea) ? 65 : 50;
     splash_range.x = proj.int_x - splash_radius;
     splash_range.width = splash_radius * 2;
     splash_range.y = proj.int_y - 40;

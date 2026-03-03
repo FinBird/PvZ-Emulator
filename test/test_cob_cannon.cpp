@@ -44,10 +44,15 @@ protected:
 
 // 1. 基础状态与充能测试
 TEST_CASE_METHOD(CobCannonTest, "InitialStateAndCharge", "[CobCannonTest]") {
-  w->plant_factory.create(plant_type::kernelpult, 2, 2);
-  w->plant_factory.create(plant_type::kernelpult, 2, 3);
-  w->select_plants({plant_type::cob_cannon});
-  plant *cob = w->plant_factory.plant(0, 2, 2);
+  w->select_plants({plant_type::kernelpult, plant_type::cob_cannon});
+  w->scene.sun.sun = 2000;
+  w->plant(plant_type::kernelpult, 2, 2);
+  w->scene.cards[0].cold_down = 0;
+  w->plant(plant_type::kernelpult, 2, 3);
+  plant *cob = find_plant(plant_type::cob_cannon);
+  if (cob == nullptr) {
+      cob = w->plant_factory.plant(1, 2, 2);
+  }
 
   REQUIRE(cob != nullptr);
   CHECK(cob->status == plant_status::cob_cannon_unarmed_idle);

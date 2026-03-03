@@ -8,7 +8,7 @@ namespace pvz_emulator::system {
 
 using namespace pvz_emulator::object;
 
-bool damage::can_be_attacked(const zombie& z, unsigned char flags) {
+bool damage::can_be_attacked(const zombie& z, unsigned int flags) {
     if (!(flags & attack_flags::dying_zombies) &&
         (z.is_dead || z.has_death_status()))
     {
@@ -60,23 +60,25 @@ bool damage::can_be_attacked(const zombie& z, unsigned char flags) {
         !z.is_eating &&
         z.is_in_water;
 
-    if (flags & attack_flags::lurking_snorkel && is_lurking_snorkel) {
-        return true;
+    if (z.type == zombie_type::snorkel && (z.row == 2 || z.row == 3) && !z.is_eating) {
+        if (!(flags & static_cast<unsigned int>(attack_flags::lurking_snorkel))) {
+            return false;
+        }
     }
 
-    if (flags & attack_flags::digging_digger &&
+    if (flags & static_cast<unsigned int>(attack_flags::digging_digger) &&
         z.status == zombie_status::digger_dig)
     {
         return true;
     }
 
-    if (flags & attack_flags::flying_balloon &&
+    if (flags & static_cast<unsigned int>(attack_flags::flying_balloon) &&
         z.is_flying_or_falling())
     {
         return true;
     }
 
-    if (flags & attack_flags::ground && (
+    if (flags & static_cast<unsigned int>(attack_flags::ground) && (
         !z.is_flying_or_falling() &&
         !is_lurking_snorkel &&
         z.status != zombie_status::digger_dig))
@@ -375,6 +377,7 @@ void damage::set_smashed(object::plant& p) {
 }
 
 void damage::activate_blover() {
+    scene.fog.blown_countdown = 2000;
     for (auto& z : scene.zombies) {
         if (!z.has_death_status() &&
             z.status == zombie_status::balloon_flying)

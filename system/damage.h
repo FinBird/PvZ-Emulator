@@ -59,7 +59,7 @@ class damage {
     }
 
 public:
-    bool can_be_attacked(const object::zombie& z, unsigned char flags);
+    bool can_be_attacked(const object::zombie& z, unsigned int flags);
 
     void set_is_eating(object::zombie& z);
     void unset_is_eating(object::zombie& z);

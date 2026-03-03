@@ -136,6 +136,7 @@ zombie* plant_base::find_target(const plant& p, unsigned int row, bool is_alt_at
             continue;
         }
 
+
         if (!damage(scene).can_be_attacked(z, flags)) {
             continue;
         }

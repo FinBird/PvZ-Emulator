@@ -152,9 +152,8 @@ TEST_CASE_METHOD(AdvancedPlantsTest, "CobCannonStateAndLaunch",
                  "[AdvancedPlantsTest]") {
   w->select_plants({plant_type::kernelpult, plant_type::cob_cannon});
   w->scene.sun.sun = 2000;
-
   REQUIRE(w->plant(plant_type::kernelpult, 2, 1));
-  w->scene.cards[0].cold_down = 0; // Reset cool down
+  w->scene.cards[0].cold_down = 0;
   REQUIRE(w->plant(plant_type::kernelpult, 2, 2));
 
   REQUIRE(w->plant(plant_type::cob_cannon, 2, 1));

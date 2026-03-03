@@ -52,10 +52,12 @@ TEST_CASE("SunflowerProductionInterval", "[SunPlants]") {
 TEST_CASE("TwinSunflowerProduction", "[SunPlants]") {
   auto w = std::make_unique<world>(scene_type::day);
   w->reset();
+  w->scene.sun.sun = 1000;
   w->scene.sun.natural_sun_countdown = 99999;
-  w->scene.stop_spawn = true;
   w->select_plants({plant_type::sunflower, plant_type::twin_sunflower});
+  w->scene.sun.sun = 1000;
   w->plant(plant_type::sunflower, 1, 1);
+  w->scene.cards[0].cold_down = 0;
   w->plant(plant_type::twin_sunflower, 1, 1);
 
   plant *tsf = nullptr;

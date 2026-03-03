@@ -44,7 +44,7 @@ void plant_imitater::init(
 {
     plant_base::init(p, plant_type::imitater, row, col, target);
     p.reanim.fps = rng.randfloat(25, 30);
-    p.countdown.effect = 200;
+    p.countdown.status = 200;
     p.status = plant_status::idle;
     p.edible = plant_edible_status::visible_and_edible;
 }

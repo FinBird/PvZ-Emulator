@@ -122,6 +122,7 @@ public:
 	void reset() {
 		scene.reset();
 		spawn.reset();
+		sun.reset();
 	}
 
 	void reset(object::scene_type type) {

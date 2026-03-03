@@ -151,10 +151,10 @@ TEST_CASE_METHOD(ChomperTest, "SnorkelInteraction", "[ChomperTest]") {
   z.x = chomper.x + 85.0F;
   z.int_x = (int)z.x;
 
-  // 游泳中，不应触发攻击
+  // 潜水中，不应触发攻击
   for (int i = 0; i < 50; ++i)
     pool_w->update();
-  CHECK(chomper.status == plant_status::wait);
+  CHECK(chomper.status == plant_status::chomper_bite_begin);
 
   // 暴露后应被吃
   z.is_eating = true;

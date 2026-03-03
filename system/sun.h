@@ -23,6 +23,10 @@ public:
     }
 
     void update();
+    void reset() {
+        data.natural_sun_countdown = gen_nature_sun_countdown();
+        data.natural_sun_generated = 0;
+    }
 };
 
 }

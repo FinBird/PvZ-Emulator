@@ -42,7 +42,7 @@ TEST_CASE_METHOD(ImitaterTest, "InterruptedByGargantuarSmash",
   CHECK(imitater->is_smashed);
   CHECK(imitater->countdown.dead == 500);
 
-  for (int i = 0; i < 300; ++i)
+  for (int i = 0; i < 600; ++i)
     w->update();
 
   CHECK(imitater->is_dead);

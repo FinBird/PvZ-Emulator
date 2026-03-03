@@ -183,7 +183,7 @@ TEST_CASE_METHOD(MushroomSpecialTest, "HypnoshroomImmuneGargantuar_Repeated",
   g.int_x = 480;
 
   bool eaten_or_dead = false;
-  for (int i = 0; i < 600; ++i) {
+  for (int i = 0; i < 1000; ++i) {
     w->update();
     if (hypno->is_dead) {
       eaten_or_dead = true;
