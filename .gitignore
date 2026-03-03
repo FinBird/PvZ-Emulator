@@ -358,3 +358,4 @@ healthchecksdb
 compile_commands.json
 .xmake/
 .cache/
+.clangd
