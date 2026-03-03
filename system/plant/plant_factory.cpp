@@ -121,7 +121,7 @@ unsigned int plant_factory::get_cost(object::plant_type type) const {
             }
         }
 
-        return plant::COST_TABLE[static_cast<int>(type)] + 50 * n;
+        return plant::COST_TABLE[static_cast<int>(type)] + (50 * n);
     } else {
         return plant::COST_TABLE[static_cast<int>(type)];
     }
@@ -431,21 +431,21 @@ plant& plant_factory::create(
 
     if (!skip_plant_map){
         if (p.type == plant_type::pumpkin) {
-            // assert(!scene.plants.is_active(scene.plant_map[p.row][p.col].pumpkin));
+            assert(!scene.plants.is_active(scene.plant_map[p.row][p.col].pumpkin));
             scene.plant_map[p.row][p.col].pumpkin = &p;
         } else if (p.type == plant_type::coffee_bean) {
-            // assert(!scene.plants.is_active(scene.plant_map[p.row][p.col].coffee_bean));
+            assert(!scene.plants.is_active(scene.plant_map[p.row][p.col].coffee_bean));
             scene.plant_map[p.row][p.col].coffee_bean = &p;
         } else if (p.type == plant_type::flower_pot || p.type == plant_type::lily_pad) {
-            // assert(!scene.plants.is_active(scene.plant_map[p.row][p.col].base));
+            assert(!scene.plants.is_active(scene.plant_map[p.row][p.col].base));
             scene.plant_map[p.row][p.col].base = &p;
         } else if (p.type == plant_type::cob_cannon) {
-            // assert(!scene.plants.is_active(scene.plant_map[p.row][p.col].base));
-            // assert(!scene.plants.is_active(scene.plant_map[p.row][p.col + 1].base));
+            assert(!scene.plants.is_active(scene.plant_map[p.row][p.col].base));
+            assert(!scene.plants.is_active(scene.plant_map[p.row][p.col + 1].base));
             scene.plant_map[p.row][p.col].content = &p;
             scene.plant_map[p.row][p.col + 1].content = &p;
         } else {
-            // assert(!scene.plants.is_active(scene.plant_map[p.row][p.col].content));
+            assert(!scene.plants.is_active(scene.plant_map[p.row][p.col].content));
             scene.plant_map[p.row][p.col].content = &p;
         }
     }
@@ -521,7 +521,7 @@ plant* plant_factory::plant(
 
         if (col + 1 < 9) {
             auto& s = scene.plant_map[row][col + 1];
-            if (s.content) {
+            if (s.content != nullptr) {
                 destroy(*s.content);
             }
         }
