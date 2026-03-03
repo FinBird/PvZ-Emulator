@@ -1,6 +1,8 @@
 #include <cmath>
 #include <cassert>
 #include "plant_system.h"
+
+#include <math.h>
 #include "system/damage.h"
 
 namespace pvz_emulator::system {
@@ -55,8 +57,8 @@ void plant_system::get_pea_offset(const plant& p, int& x, int& y) {
         return;
     }
 
-    x = static_cast<int>((nx - cx) * rfs.frame_progress + cx);
-    y = static_cast<int>((ny - cy) * rfs.frame_progress + cy);
+    x = static_cast<int>(((nx - cx) * rfs.frame_progress) + cx);
+    y = static_cast<int>(((ny - cy) * rfs.frame_progress) + cy);
 }
 
 void plant_system::launch(plant& p,
@@ -241,8 +243,8 @@ void plant_system::launch(plant& p,
     proj.from_plant = p.uuid;
     proj.flags = p.get_attack_flags(is_alt_attack);
 
-    double dist_x;
-    double dist_y;
+    double dist_x = NAN;
+    double dist_y = NAN;
 
     switch (p.type) {
     case plant_type::cabbagepult:
@@ -273,8 +275,8 @@ void plant_system::launch(plant& p,
         proj.motion_type = projectile_motion_type::parabola;
         proj.dx = static_cast<float>(std::max(40.0, dist_x) / 120.0);
         proj.dy2 = 0;
-        proj.ddy = static_cast<float>(dist_y / 120.0 - 7.0);
-        proj.dddy = 0.115f;
+        proj.ddy = static_cast<float>((dist_y / 120.0) - 7.0);
+        proj.dddy = 0.115F;
         break;
 
     case plant_type::threepeater:
@@ -302,7 +304,7 @@ void plant_system::launch(plant& p,
 
     case plant_type::cob_cannon:
         proj.flags = p.get_attack_flags(false);
-        proj.dx = 0.001f;
+        proj.dx = 0.001F;
         proj.motion_type = projectile_motion_type::parabola;
         proj.dy2 = 0;
         proj.ddy = -8;
@@ -356,7 +358,7 @@ void plant_system::update_launch_countdown(plant& p) {
 
     case plant_type::cattail:
         if (p.countdown.launch == 19) {
-            if (auto target = subsystems.cattail.find_target(p, p.row, false)) {
+            if (auto *target = subsystems.cattail.find_target(p, p.row, false)) {
                 launch(p, target, p.row, false);
             }
         }
@@ -400,7 +402,7 @@ void plant_system::update_launch_countdown(plant& p) {
             case plant_type::melonpult:
             case plant_type::winter_melon: {
                 bool alt = p.status == plant_status::kernelpult_launch_butter;
-                auto target = subsystems.base.find_target(p, p.row, alt);
+                auto *target = subsystems.base.find_target(p, p.row, alt);
 
                 launch(p, target, p.row, alt);
                 break;
@@ -461,7 +463,8 @@ void plant_system::update_countdown_and_status(plant& p) {
 
     if (p.is_sleeping ||
         p.is_smashed ||
-        p.edible != plant_edible_status::visible_and_edible)
+        (p.type != plant_type::imitater &&
+         p.edible != plant_edible_status::visible_and_edible))
     {
         return;
     }
@@ -531,6 +534,7 @@ void plant_system::update_countdown_and_status(plant& p) {
 
     case plant_type::sunshroom:
         subsystems.sunshroom.update(p);
+        break;
 
     case plant_type::twin_sunflower:
         subsystems.twin_sunflower.produce_sun(p);
