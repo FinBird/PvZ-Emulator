@@ -17,6 +17,8 @@ struct rect {
 
     float get_overlap_len(const rect& r);
 
+    bool intersects(const rect& r) const;
+
     void to_json(rapidjson::Writer<rapidjson::StringBuffer>& writer);
 };
 

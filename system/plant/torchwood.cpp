@@ -1,3 +1,4 @@
+#include "damage.h"
 #include "plant.h"
 
 namespace pvz_emulator::system {
@@ -11,22 +12,29 @@ void plant_torchwood::update(plant & p) {
     for (auto& proj : scene.projectiles) {
         if (proj.type != projectile_type::pea &&
             proj.type != projectile_type::snow_pea ||
+            proj.type == projectile_type::fire_pea ||
             proj.row != p.row)
         {
             continue;
         }
 
         rect pjr;
-        proj.get_attack_box(pjr);
+        pjr.width = 28;
+        pjr.height = 28;
+        pjr.x = static_cast<int>(proj.x) - 14;
+        pjr.y = static_cast<int>(proj.y) - 14;
 
-        if (pr.get_overlap_len(pjr) >= 10 && proj.last_torchwood_col != p.col) {
-            if (proj.type == projectile_type::pea) {
-                proj.type = projectile_type::fire_pea;
-            } else {
-                proj.type = projectile_type::pea;
+        if (pr.intersects(pjr)) {
+            float overlap = pr.get_overlap_len(pjr);
+            if (overlap >= 10.0F && proj.last_torchwood_col != static_cast<int>(p.col)) {
+                if (proj.type == projectile_type::pea) {
+                    proj.type = projectile_type::fire_pea;
+                } else if (proj.type == projectile_type::snow_pea) {
+                    proj.type = projectile_type::pea;
+                    proj.flags &= ~(static_cast<unsigned int>(zombie_damage_flags::slow_effect));
+                }
+                proj.last_torchwood_col = static_cast<int>(p.col);
             }
-
-            proj.last_torchwood_col = p.col;
         }
     }
 }
