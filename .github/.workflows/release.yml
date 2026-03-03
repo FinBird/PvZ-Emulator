@@ -1,0 +1,41 @@
+name: CI Release
+
+on:
+  push:
+    tags:
+      - 'v*' 
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Zig
+        uses: goto-bus-stop/setup-zig@v2
+        with:
+          version: 0.15.2
+
+      - name: Setup Xmake
+        uses: xmake-io/github-action-setup-xmake@v1
+        with:
+          xmake-version: 3.0.7
+
+      - name: Build Release
+        run: |
+          xmake f -p windows -a x64 -m release --toolchain=zig -y
+          xmake build example
+
+      - name: Prepare Artifacts
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path "./publish_bin"
+          Copy-Item "build/windows/x64/release/example*" "./publish_bin/" -ErrorAction SilentlyContinue
+          Compress-Archive -Path "./publish_bin/*", "./example/*" -DestinationPath "pvz_emulator_windows_x64.zip"
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: pvz_emulator_windows_x64.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

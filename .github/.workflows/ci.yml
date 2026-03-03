@@ -1,0 +1,39 @@
+name: CI Commit
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest]
+        arch: [x64]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Zig
+        uses: goto-bus-stop/setup-zig@v2
+        with:
+          version: 0.15.2
+
+      - name: Setup Xmake
+        uses: xmake-io/github-action-setup-xmake@v1
+        with:
+          xmake-version: 3.0.7
+
+      - name: Configure
+        run: xmake f -p windows -a ${{ matrix.arch }} --toolchain=zig -y
+
+      - name: Build Tests
+        run: xmake build test
+
+      - name: Run Tests
+        run: xmake run tests
