@@ -114,11 +114,12 @@ void plant::get_attack_box(rect& rect, bool is_alt_attack) const {
         rect.height = attack_box.height;
         return;
 
-    case plant_type::torchwood:
-        rect.x = x + 50;
-        rect.y = y;
-        rect.width = 30;
-        rect.height = attack_box.height;
+    case plant_type::torchwood:// TODO:?
+        rect.x = x + 10;
+        // 修正：将 Y 轴判定区中心大幅度上下扩展，确保覆盖子弹飞行轨道
+        rect.y = y - 50;
+        rect.width = 54;
+        rect.height = 100; // 50(上) + 50(下)
         return;
 
     case plant_type::puffshroom:
