@@ -19,7 +19,7 @@ bool plant_factory::can_plant_advanced_plant(
 
     switch (advanced) {
     case plant_type::gatling_pea:
-        return status.content->type == plant_type::gatling_pea;
+        return status.content->type == plant_type::repeater;
 
     case plant_type::twin_sunflower:
         return status.content->type == plant_type::sunflower;
@@ -599,6 +599,7 @@ void plant_factory::destroy(object::plant& p) {
     if (p.type == plant_type::cob_cannon &&
         scene.plant_map[p.row][p.col + 1].content == &p)
     {
+        scene.plant_map[p.row][p.col].content = nullptr;
         scene.plant_map[p.row][p.col + 1].content = nullptr;
     }
 }
