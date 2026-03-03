@@ -218,6 +218,9 @@ void zombie::to_json(
 {
     writer.StartObject();
 
+    writer.Key("uuid");
+    writer.Int(uuid);
+
     writer.Key("id");
     writer.Uint64(scene.zombies.get_index(*this));
 
@@ -323,6 +326,27 @@ void zombie::to_json(
     writer.Uint(accessory_2.max_hp);
     writer.EndObject();
 
+    writer.Key("attempted_smashes");
+    writer.StartArray();
+    for (int i = 0; i < attempted_smashes.size; i++) {
+        writer.Int(attempted_smashes.arr[i]);
+    }
+    writer.EndArray();
+
+    writer.Key("ignored_smashes");
+    writer.StartArray();
+    for (int i = 0; i < ignored_smashes.size; i++) {
+        writer.Int(ignored_smashes.arr[i]);
+    }
+    writer.EndArray();
+
+    writer.Key("hit_by_ash");
+    writer.StartArray();
+    for (int i = 0; i < hit_by_ash.size; i++) {
+        writer.Int(hit_by_ash.arr[i]);
+    }
+    writer.EndArray();
+
     writer.Key("master_id");
     if (master_id == -1) {
         writer.Null();
@@ -332,11 +356,11 @@ void zombie::to_json(
 
     writer.Key("partners");
     writer.StartArray();
-    for (auto i : partners) {
-        if (i == -1) {
+    for (int i = 0; i < 4; i++) {
+        if (partners[i] == -1) {
             writer.Null();
         } else {
-            writer.Int(i);
+            writer.Int(partners[i]);
         }
     }
     writer.EndArray();

@@ -10,6 +10,7 @@ projectile&
 projectile_factory::alloc_and_init(projectile_type type, int row, int x, int y) {
     auto& p = scene.projectiles.alloc();
 
+    p.from_plant = 0;
     p.type = type;
     p.motion_type = projectile_motion_type::straight;
 

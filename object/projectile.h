@@ -36,6 +36,7 @@ class zombie;
 
 class projectile {
 public:
+    int from_plant;
     projectile_type type;
     projectile_motion_type motion_type;
 

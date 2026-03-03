@@ -17,6 +17,7 @@ void plant_base::init(
     int col,
     plant_type imitater_target)
 {
+    p.uuid = get_uuid();
     p.type = type;
     p.imitater_target = imitater_target;
 
@@ -58,6 +59,10 @@ void plant_base::init(
     p.is_smashed = false;
     p.is_sleeping = false;
     p.can_attack = plant::CAN_ATTACK_TABLE[static_cast<size_t>(p.type)];
+    p.ignore_garg_smash = false;
+    p.ignore_jack_explode = false;
+
+    p.explode = {0, 0, 0};
 
     p.threepeater_time_since_first_shot = 0;
 

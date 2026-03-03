@@ -597,6 +597,7 @@ void zombie_system::update_pos(zombie& z) {
     }
 
     if (!z.is_blown || prev_x <= 850) {
+        // fix y after changing row (e.g. garlic)
         if (z.action == zombie_action::none) {
             auto init_y = zombie_init_y(scene.type, z, z.row);
 
@@ -755,6 +756,7 @@ bool zombie_system::update_entering_home(object::zombie& z) {
     }
 
     if (z.int_x < threshold && z.is_not_dying) {
+        zombie_factory.destroy(z);
         return true;
     }
 
@@ -824,7 +826,7 @@ bool zombie_system::update() {
                 update_eating(z);
                 update_water_status(z);
 
-                if (update_entering_home(z)) {
+                if (update_entering_home(z) && !scene.ignore_game_over) {
                     return true;
                 }
             }
@@ -848,6 +850,14 @@ bool zombie_system::update() {
         z.int_y = static_cast<int>(z.y);
 
         reanim.update_progress(z.reanim);
+
+        if (z.dance_cheat != zombie_dance_cheat::none) {
+            assert(z.type == zombie_type::zombie || z.type == zombie_type::conehead || z.type == zombie_type::buckethead);
+            if (z.dance_cheat == zombie_dance_cheat::slow) {
+                assert(scene.is_zombie_dance);
+            }
+            reanim.update_status(z);
+        }
     }
 
     return false;

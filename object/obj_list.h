@@ -23,14 +23,14 @@ template<typename T, size_t S> class obj_list {
 		obj_list& list;
 
 	public:
-		explicit iterator(int n, obj_list& l) : i(n), list(l) {
+		explicit iterator(int n, obj_list& l): i(n), list(l) {
 			while (i < list.active_end &&
 				(list.a[i].t.is_freeable() || list.a[i].next_available != i))
 			{
 				i++;
 			}
 		}
-
+		
 		iterator& operator++() {
 			do {
 				i++;

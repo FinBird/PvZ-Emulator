@@ -140,6 +140,7 @@ class scene;
 
 class plant {
 public:
+    int uuid;
     plant_type type;
     plant_status status;
 
@@ -178,6 +179,7 @@ public:
         int awake;
         int effect;
         int dead;
+        int blover_disappear;
     } countdown;
 
     object::reanim reanim;
@@ -195,6 +197,15 @@ public:
     bool is_smashed;
     bool is_sleeping;
     bool can_attack;
+    bool ignore_garg_smash;
+    bool ignore_jack_explode;
+    
+    struct explode_info {
+        unsigned int from_upper;
+        unsigned int from_same;
+        unsigned int from_lower;
+    };
+    explode_info explode;
 
     static const std::array<unsigned int, 49> EFFECT_INTERVAL_TABLE;
     static const std::array<bool, 49> CAN_ATTACK_TABLE;

@@ -2,6 +2,42 @@
 
 namespace pvz_emulator::object {
 
+scene_type str_to_scene_type(const std::string& str) {
+    if (str == "DE") {
+        return scene_type::day;
+    } else if (str == "NE") {
+        return scene_type::night;
+    } else if (str == "PE") {
+        return scene_type::pool;
+    } else if (str == "FE") {
+        return scene_type::fog;
+    } else if (str == "RE") {
+        return scene_type::roof;
+    } else if (str == "ME") {
+        return scene_type::moon_night;
+    } else {
+        assert(false && "unreachable");
+    }
+}
+
+std::string scene_type_to_str(scene_type scene) {
+    if (scene == scene_type::day) {
+        return "DE";
+    } else if (scene == scene_type::night) {
+        return "NE";
+    } else if (scene == scene_type::pool) {
+        return "PE";
+    } else if (scene == scene_type::fog) {
+        return "FE";
+    } else if (scene == scene_type::roof) {
+        return "RE";
+    } else if (scene == scene_type::moon_night) {
+        return "ME";
+    } else {
+        assert(false && "unreachable");
+    }
+}
+
 scene::scene(const scene& s) :
     type(s.type),
     rng(s.rng),
@@ -16,10 +52,15 @@ scene::scene(const scene& s) :
     ice_path(s.ice_path),
     cards(s.cards),
     is_game_over(s.is_game_over),
+    ignore_game_over(s.ignore_game_over),
     is_zombie_dance(s.is_zombie_dance),
     is_future_enabled(s.is_future_enabled),
     stop_spawn(s.stop_spawn),
-    enable_split_pea_bug(s.enable_split_pea_bug)
+    enable_split_pea_bug(s.enable_split_pea_bug),
+    disable_garg_throw_imp(s.disable_garg_throw_imp),
+    disable_crater(s.disable_crater),
+    lock_dx(s.lock_dx),
+    lock_dx_val(s.lock_dx_val)
 {
     memset(&plant_map, 0, sizeof(plant_map));
 
@@ -106,12 +147,15 @@ void scene::to_json(rapidjson::Writer<rapidjson::StringBuffer>& writer) {
     writer.Key("spawn");
     writer.StartObject();
 
-    writer.Key("spawn_list");
-    writer.StartArray();
-    for (auto& wave : spawn.spawn_list) {
+    if (!stop_spawn) {
+        writer.Key("spawn_list");
         writer.StartArray();
-        for (auto& type : wave) {
-            writer.String(zombie::type_to_string(type));
+        for (auto& wave : spawn.spawn_list) {
+            writer.StartArray();
+            for (auto& type : wave) {
+                writer.String(zombie::type_to_string(type));
+            }
+            writer.EndArray();
         }
         writer.EndArray();
     }
@@ -183,13 +227,15 @@ void scene::to_json(rapidjson::Writer<rapidjson::StringBuffer>& writer) {
         zombie_type::giga_gargantuar,
     };
 
-    writer.Key("spawn_flags");
-    writer.StartObject();
-    for (auto& type : ALL_ZOMBIES) {
-        writer.Key(zombie::type_to_string(type));
-        writer.Bool(spawn.spawn_flags[static_cast<int>(type)]);
+    if (!stop_spawn) {
+        writer.Key("spawn_flags");
+        writer.StartObject();
+        for (auto& type : ALL_ZOMBIES) {
+            writer.Key(zombie::type_to_string(type));
+            writer.Bool(spawn.spawn_flags[static_cast<int>(type)]);
+        }
+        writer.EndObject();
     }
-    writer.EndObject();
 
     writer.Key("is_hugewave_shown");
     writer.Bool(spawn.is_hugewave_shown);
@@ -251,8 +297,22 @@ void scene::to_json(rapidjson::Writer<rapidjson::StringBuffer>& writer) {
     writer.Key("is_game_over");
     writer.Bool(is_game_over);
 
+    writer.Key("ignore_game_over");
+    writer.Bool(ignore_game_over);
+
     writer.Key("stop_spawn");
     writer.Bool(stop_spawn);
+
+    writer.Key("disable_garg_throw_imp");
+    writer.Bool(disable_garg_throw_imp);
+
+    writer.Key("disable_crater");
+    writer.Bool(disable_crater);
+
+    if (lock_dx) {
+        writer.Key("lock_dx_val");
+        writer.Double(lock_dx_val);
+    }
 
     writer.EndObject();
 }
@@ -264,8 +324,13 @@ void scene::reset() {
     is_zombie_dance = false;
     is_future_enabled = false;
     is_game_over = false;
+    ignore_game_over = false;
     stop_spawn = false;
     enable_split_pea_bug = true;
+    disable_garg_throw_imp = false;
+    disable_crater = false;
+    lock_dx = false;
+    lock_dx_val = 0.0f;
 
     zombies.clear();
     plants.clear();

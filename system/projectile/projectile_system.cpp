@@ -220,7 +220,8 @@ void projectile_system::parabola_do_attack(projectile& proj, zombie* z) {
             115,
             1,
             true,
-            proj.flags);
+            proj.flags,
+            proj.from_plant);
         
         attack_target_zombie(proj, nullptr);
     } else {

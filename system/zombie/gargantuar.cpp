@@ -41,7 +41,13 @@ void zombie_gargantuar::update(zombie& z) {
                     p.row == target->row &&
                     p.col == target->col)
                 {
-                    damage(scene).set_smashed(p);
+                    if (p.ignore_garg_smash) {
+                        if (z.ignored_smashes.size < 4) {
+                            z.ignored_smashes.arr[z.ignored_smashes.size++] = p.uuid;
+                        }
+                    } else {
+                        damage(scene).set_smashed(p);
+                    }
                 }
             }
         }
@@ -77,21 +83,24 @@ void zombie_gargantuar::update(zombie& z) {
         }
 
         z.has_item_or_walk_left = false;
-        auto& imp = zombie_factory(scene).create(zombie_type::imp, z.spawn_wave);
+        if (!scene.disable_garg_throw_imp) {
+            auto& imp = zombie_factory(scene).create(zombie_type::imp);
+            imp.spawn_wave = z.spawn_wave;
 
-        imp.row = z.row;
-        imp.status = zombie_status::imp_flying;
+            imp.row = z.row;
+            imp.status = zombie_status::imp_flying;
 
-        imp.x = z.x - 133.0f;
-        imp.y = zombie_init_y(scene.type, z, z.row);
+            imp.x = z.x - 133.0f;
+            imp.y = zombie_init_y(scene.type, z, z.row);
 
-        imp.dx = 3.0f;
-        imp.dy = 88.0f;
-        imp.d2y = static_cast<float>(d2y / 3 * 0.5 * 0.05000000074505806);
+            imp.dx = 3.0f;
+            imp.dy = 88.0f;
+            imp.d2y = static_cast<float>(d2y / 3 * 0.5 * 0.05000000074505806);
 
-        reanim.set(imp, zombie_reanim_name::anim_thrown, reanim_type::once, 18);
-        reanim.update_progress(imp.reanim);
-
+            reanim.set(imp, zombie_reanim_name::anim_thrown, reanim_type::once, 18);
+            reanim.update_progress(imp.reanim);
+        }
+ 
         set_walk(z);
         return;
     }
@@ -113,7 +122,10 @@ void zombie_gargantuar::update(zombie& z) {
             return;
         }
 
-        if (find_target(z, zombie_attack_type::smash_or_eat)) {
+        if (auto p = find_target(z, zombie_attack_type::smash_or_eat)) {
+            if (z.attempted_smashes.size < 64) {
+                z.attempted_smashes.arr[z.attempted_smashes.size++] = p->uuid;
+            }
             z.status = zombie_status::gargantuar_smash;
             reanim.set(z, zombie_reanim_name::anim_smash, reanim_type::once, 16);
         }

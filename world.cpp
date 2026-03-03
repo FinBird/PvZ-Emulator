@@ -32,7 +32,7 @@ bool world::update() {
 
     plant_system.update();
 
-    if (zombie.update()) {
+    if (zombie.update() && !scene.ignore_game_over) {
         scene.is_game_over = true;
         return true;
     }
@@ -59,7 +59,6 @@ bool world::update() {
 
     if (endgame.update()) {
         spawn.reset();
-        scene.spawn.total_flags++;
         return true;
     } else {
         return false;
@@ -325,4 +324,3 @@ bool world::check_build(const check_list &plants) {
     return true;
 }
 
-}

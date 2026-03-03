@@ -1,8 +1,11 @@
 #pragma once
+#include <string>
 #include "rapidjson/writer.h"
 #include "rapidjson/stringbuffer.h"
 
 namespace pvz_emulator::object {
+
+int get_uuid();
 
 struct rect {
     int x;

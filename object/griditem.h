@@ -23,7 +23,7 @@ public:
     int countdown;
     bool is_disappeared;
 
-    bool is_freeable() const {
+    bool is_freeable() {
         return is_disappeared;
     }
 

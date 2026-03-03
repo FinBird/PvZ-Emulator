@@ -10,6 +10,12 @@
 
 namespace pvz_emulator::object {
 
+int next_uuid = 0;
+
+int get_uuid() {
+    return next_uuid++;
+}
+
 bool rect::is_overlap_with_circle(int px, int py, int r) {
     bool x_in_range = x <= px && px <= x + width;
     bool y_in_range = y <= py && py <= y + height;

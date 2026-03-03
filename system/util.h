@@ -39,4 +39,3 @@ enum class zombie_attack_type {
 
 bool is_target_of_kelp(object::scene& s, const object::zombie& z);
 
-}

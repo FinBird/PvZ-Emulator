@@ -7,24 +7,20 @@ namespace pvz_emulator::system {
 
 using namespace pvz_emulator::object;
 
-void zombie_base::init(
-    object::zombie &z,
-    zombie_type type,
-    unsigned int row,
-    std::optional<unsigned int> spawn_wave)
-{
+void zombie_base::init(object::zombie &z, zombie_type type, unsigned int row) {
+    z.uuid = get_uuid();
+    z.attempted_smashes.size = 0;
+    z.ignored_smashes.size = 0;
+    z.hit_by_ash.size = 0;
+    z.dance_cheat = zombie_dance_cheat::none;
+
     z.type = type;
 
     z.status = zombie_status::walking;
     z.action = zombie_action::none;
 
     z.row = row;
-    
-    if (spawn_wave) {
-        z.spawn_wave = spawn_wave.value();
-    } else {
-        z.spawn_wave = scene.spawn.wave;
-    }
+    z.spawn_wave = scene.spawn.wave;
 
     z.hp = 270;
 
@@ -67,7 +63,7 @@ void zombie_base::init(
     z.accessory_1.type = zombie_accessories_type_1::none;
     z.accessory_1.hp = 0;
     z.accessory_2.type = zombie_accessories_type_2::none;
-    z.accessory_1.hp = 0;
+    z.accessory_2.hp = 0;
 
     memset(&z.countdown, 0, sizeof(z.countdown));
     z.countdown.dead = -1;

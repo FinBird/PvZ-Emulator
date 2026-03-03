@@ -36,6 +36,9 @@ enum class scene_type {
     moon_night = 0x5,
 };
 
+scene_type str_to_scene_type(const std::string& str);
+std::string scene_type_to_str(scene_type scene);
+
 class scene {
 public:
     scene_type type;
@@ -129,21 +132,29 @@ public:
 
     bool is_game_over;
 
+/* 可配置部分开始 */
+    bool ignore_game_over;
     bool is_zombie_dance;
     bool is_future_enabled;
-
     bool stop_spawn;
     bool enable_split_pea_bug;
+    bool disable_garg_throw_imp;
+    bool disable_crater;
+    bool lock_dx;
+    float lock_dx_val;
+/* 可配置部分结束 */
 
     scene(scene_type t) : type(t),
         rng(std::random_device()()),
         zombie_dancing_clock(rng() % 10000),
         rows(get_max_row()),
         is_game_over(false),
+        ignore_game_over(false),
         is_zombie_dance(false),
         is_future_enabled(false),
         stop_spawn(false),
-        enable_split_pea_bug(true) {}
+        enable_split_pea_bug(true),
+        disable_garg_throw_imp(false) {}
 
     scene(const scene& s);
 

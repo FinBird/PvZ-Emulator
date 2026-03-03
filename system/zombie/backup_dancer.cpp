@@ -51,4 +51,3 @@ void zombie_backup_dancer::init(zombie& z, unsigned int row, unsigned int spawn_
     set_common_fields(z);
 }
 
-}

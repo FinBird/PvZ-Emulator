@@ -320,6 +320,9 @@ void plant::to_json(
 {
     writer.StartObject();
 
+    writer.Key("uuid");
+    writer.Int(uuid);
+
     writer.Key("id");
     writer.Uint64(scene.plants.get_index(*this));
 
@@ -404,6 +407,8 @@ void plant::to_json(
     writer.Key("dead");
     writer.Int(countdown.dead);
 
+    writer.Key("blover_disappear");
+    writer.Int(countdown.blover_disappear);
     writer.EndObject();
 
     writer.Key("reanim");
@@ -446,6 +451,20 @@ void plant::to_json(
     writer.Bool(is_sleeping);
     writer.Key("can_attack");
     writer.Bool(can_attack);
+    writer.Key("ignore_garg_smash");
+    writer.Bool(ignore_garg_smash);
+    writer.Key("ignore_jack_explode");
+    writer.Bool(ignore_jack_explode);
+
+    writer.Key("explode");
+    writer.StartObject();
+    writer.Key("from_upper");
+    writer.Uint(explode.from_upper);
+    writer.Key("from_same");
+    writer.Uint(explode.from_same);
+    writer.Key("from_lower");
+    writer.Uint(explode.from_lower);
+    writer.EndObject();
 
     writer.EndObject();
 }

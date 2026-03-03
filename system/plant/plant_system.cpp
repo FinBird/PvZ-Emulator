@@ -238,6 +238,7 @@ void plant_system::launch(plant& p,
     }
 
     auto& proj = projectile_factory.create(type, row, x, y);
+    proj.from_plant = p.uuid;
     proj.flags = p.get_attack_flags(is_alt_attack);
 
     double dist_x;

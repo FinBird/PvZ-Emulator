@@ -10,15 +10,17 @@ namespace pvz_emulator::system {
 
 using namespace pvz_emulator::object;
 
-zombie& zombie_factory::create(zombie_type type, std::optional<unsigned int> spawn_wave)
+zombie& zombie_factory::create(zombie_type type, int specified_row)
 {
-    auto row = get_spawn_row(type);
+	unsigned int row;
+	if (specified_row >= 0 && can_spawn_at_row(type, static_cast<unsigned int>(specified_row))) {
+		row = static_cast<unsigned int>(specified_row);
+	} else {
+		row = get_spawn_row(type);
+	}
+	auto& z = scene.zombies.alloc();
 
-    auto& z = scene.zombies.alloc();
-
-    auto wave = spawn_wave ? spawn_wave.value() : scene.spawn.wave;
-
-    switch (type) {
+	switch (type) {
     case zombie_type::zombie:
     case zombie_type::conehead:
     case zombie_type::buckethead:
@@ -101,7 +103,7 @@ zombie& zombie_factory::create(zombie_type type, std::optional<unsigned int> spa
         break;
 
     case zombie_type::imp:
-        subsystems.imp.init(z, row, wave);
+		subsystems.imp.init(z, row);
         break;
 
     default:
@@ -139,7 +141,7 @@ void zombie_factory::create_pool_or_night_lurking(
 	unsigned int col)
 {
 	auto& z = create(type);
-	
+
 	z.x = static_cast<float>(80 * col + 15);
 	z.y = zombie_init_y(scene.type, z, row);
 	z.int_x = static_cast<int>(z.x);

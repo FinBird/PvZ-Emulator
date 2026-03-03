@@ -91,6 +91,9 @@ void projectile::to_json(
     rapidjson::Writer<rapidjson::StringBuffer>& writer)
 {
     writer.StartObject();
+    writer.Key("from_plant");
+    writer.Uint64(from_plant);
+
     writer.Key("id");
     writer.Uint64(scene.projectiles.get_index(*this));
 

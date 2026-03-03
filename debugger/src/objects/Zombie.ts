@@ -40,7 +40,7 @@ export type ZombieStatus =
     "bungee_raise" |
     "bungee_idle" |
     "pole_valuting_running" |
-    "pole_valuting_jumping" |
+    "pole_valuting_jumpping" |
     "pole_vaulting_walking" |
     "rising_from_ground" |
     "jackbox_walking" |
@@ -49,7 +49,7 @@ export type ZombieStatus =
     "pogo_idle_before_target" |
     "pogo_jump_across" |
     "newspaper_walking" |
-    "newspaper_destroyed" |
+    "newspaper_destoryed" |
     "newspaper_running" |
     "digger_dig" |
     "digger_drill" |
@@ -177,4 +177,3 @@ export interface Zombie {
 
     n_basketballs?: number,
     summon_countdown?: number
-}

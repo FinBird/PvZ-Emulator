@@ -220,4 +220,3 @@ bool is_target_of_kelp(scene &s, const zombie &z) {
     return false;
 }
 
-}

@@ -11,20 +11,21 @@ with open(path.join(path.abspath(path.dirname(__file__)), "README.md")) as f:
 class GetPybindInclude(object):
     def __str__(self):
         import pybind11
+
         return pybind11.get_include()
 
 
 class BuildExt(build_ext):
     def build_extension(self, ext):
         if self.compiler.compiler_type == "unix":
-            opts = ['-g3', '-O3', '-fvisibility=hidden', '-std=c++17']
+            opts = ["-g3", "-O3", "-fvisibility=hidden", "-std=c++17"]
         else:
-            opts = ['/O2', '/Oi', '/Ot', '/arch', '/Zi']
+            opts = ["/O2", "/Oi", "/Ot", "/arch", "/Zi", "/std:c++17"]
 
-        if sys.platform == 'darwin':
-            opts.append('-stdlib=libc++')
+        if sys.platform == "darwin":
+            opts.append("-stdlib=libc++")
 
-        ext.define_macros = [("NDEBUG", '1')]
+        ext.define_macros = [("NDEBUG", "1")]
         ext.extra_compile_args = opts
 
         build_ext.build_extension(self, ext)
