@@ -3,6 +3,8 @@
 #include "system/util.h"
 #include "projectile_system.h"
 
+#include <cmath>
+
 namespace pvz_emulator::system {
 
 using namespace pvz_emulator::object;
@@ -44,7 +46,7 @@ zombie* projectile_system::find_zombie_target(projectile& proj) {
     rect proj_rect;
     proj.get_attack_box(proj_rect);
 
-    int min_x;
+    int min_x = 99999;
     zombie* target = nullptr;
 
     for (auto& z : scene.zombies) {
@@ -118,42 +120,46 @@ bool projectile_system::is_covered_by_suppter(
     const projectile& proj,
     const zombie& z)
 {
-    rect proj_rect;
-    proj.get_attack_box(proj_rect);
+    if (!damage.can_be_attacked(z, proj.flags)) {
+        return false;
+    }
 
-    rect zr;
-    z.get_hit_box(zr);
-
-    if ((z.type == zombie_type::catapult ||
-        z.type == zombie_type::zomboni ||
-        z.accessory_2.type == zombie_accessories_type_2::screen_door ||
-        z.accessory_2.type == zombie_accessories_type_2::ladder) &&
-        proj.type == projectile_type::fire_pea)
+    if (proj.type == projectile_type::fire_pea &&
+        (z.type == zombie_type::catapult ||
+         z.type == zombie_type::zomboni ||
+         z.accessory_2.type == zombie_accessories_type_2::screen_door ||
+         z.accessory_2.type == zombie_accessories_type_2::ladder))
     {
         return false;
     }
 
-    if (proj.type == projectile_type::fire_pea && proj.row != z.row ||
-        abs(static_cast<int>(proj.row) - static_cast<int>(z.row)) > 1 ||
-        !damage.can_be_attacked(z, proj.flags))
-    {
+    int row_diff = std::abs(static_cast<int>(proj.row) - static_cast<int>(z.row));
+    if (proj.type == projectile_type::fire_pea && row_diff != 0) {
+        return false;
+    }
+    if (row_diff > 1) {
         return false;
     }
 
-    return zr.get_overlap_len(proj_rect) >= 0;
+    rect splash_range;
+    int splash_size = (proj.type == projectile_type::fire_pea) ? 160 : 100;
+    splash_range.x = proj.int_x - (splash_size / 2);
+    splash_range.width = splash_size;
+    splash_range.y = proj.int_y - 40;
+    splash_range.height = 80;
+
+    rect z_hit_box;
+    z.get_hit_box(z_hit_box);
+
+    return splash_range.intersects(z_hit_box);
 }
 
 void projectile_system::suppter_attack(projectile& proj, zombie* main_target) {
-    int n = 0;
     std::vector<zombie*> targets;
 
     for (auto& z : scene.zombies) {
         if (is_covered_by_suppter(proj, z)) {
-            targets.emplace_back(&z);
-
-            if (&z != main_target) {
-                n++;
-            }
+            targets.push_back(&z);
         }
     }
 
@@ -166,7 +172,7 @@ void projectile_system::suppter_attack(projectile& proj, zombie* main_target) {
         dmg = m / n >= 1 ? m / n : 1;
     }
 
-    for (auto z : targets) {
+    for (auto *z : targets) {
         auto flags = proj.get_flags_with_zombie(*z);
 
         if (z == main_target) {
@@ -188,7 +194,7 @@ void projectile_system::attack_target_zombie(projectile& proj, zombie* z) {
         proj.type != projectile_type::wintermelon &&
         proj.type != projectile_type::fire_pea)
     {
-        if (z) {
+        if (z != nullptr) {
             damage.take(
                 *z,
                 projectile::DAMAGE[static_cast<int>(proj.type)],
@@ -261,7 +267,7 @@ void projectile_system::do_parabola_motion(projectile& proj) {
             return;
         }
 
-        float top_dy1;
+        float top_dy1 = NAN;
         switch (proj.type) {
         case projectile_type::butter:
             top_dy1 = -32;
@@ -307,7 +313,7 @@ void projectile_system::do_parabola_motion(projectile& proj) {
         zombie_target = find_zombie_target(proj);
     }
 
-    if (zombie_target) {
+    if (zombie_target != nullptr) {
         parabola_do_attack(proj, zombie_target);
     } else if (plant_target == nullptr) {
         if (proj.dy1 <= (proj.type == projectile_type::cob_cannon ? -40 : 80)) {
@@ -352,7 +358,7 @@ void projectile_system::others_do_attack(projectile& proj) {
     }
 
     if (proj.motion_type == projectile_motion_type::cattail) {
-        auto z = scene.zombies.get(proj.target);
+        auto *z = scene.zombies.get(proj.target);
 
         if (z != nullptr && damage.can_be_attacked(*z, proj.flags)) {
             rect proj_rect;
@@ -380,7 +386,7 @@ void projectile_system::others_do_attack(projectile& proj) {
     if (static_cast<int>(proj.type) > 0 && proj.type != projectile_type::star ||
         proj.shadow_y - proj.y <= 90)
     {
-        if (auto target = find_zombie_target(proj)) {
+        if (auto *target = find_zombie_target(proj)) {
             attack_target_zombie(proj, target);
         }
     }
@@ -405,7 +411,7 @@ void projectile_system::roof_set_disappear(projectile& proj) {
 }
 
 static void get_vector_cos_and_sin(float x, float y, float& c, float& s) {
-    auto d = sqrt(x * x + y * y);
+    auto d = sqrt((x * x) + (y * y));
 
     if (d == 0) {
         c = x;
@@ -420,11 +426,11 @@ static void get_vector_cos_and_sin(float x, float y, float& c, float& s) {
 void projectile_system::do_other_motion(projectile& proj) {
     switch (proj.motion_type) {
     case projectile_motion_type::left_straight:
-        proj.x -= 3.329999923706055f;
+        proj.x -= 3.329999923706055F;
         break;
 
     case projectile_motion_type::cattail: {
-        auto z = scene.zombies.get(proj.target);
+        auto *z = scene.zombies.get(proj.target);
 
         if (z != nullptr && damage.can_be_attacked(*z, proj.flags)) {
             rect zr;
@@ -434,17 +440,17 @@ void projectile_system::do_other_motion(projectile& proj) {
 
             get_vector_cos_and_sin(
                 static_cast<float>(
-                    zr.x + zr.width / 2.0 - proj.attack_box.width / 2.0 - proj.x),
+                    zr.x + (zr.width / 2.0) - (proj.attack_box.width / 2.0) - proj.x),
                 static_cast<float>(
-                    zr.y + zr.height / 2.0 - proj.attack_box.height / 2.0 - proj.y),
+                    zr.y + (zr.height / 2.0) - (proj.attack_box.height / 2.0) - proj.y),
                 a2[0],
                 a2[1]);
 
             float res[2];
 
             get_vector_cos_and_sin(
-                proj.dx + a2[0] * proj.time_since_created * 0.001000000047497451f,
-                proj.dy2 + a2[1] * proj.time_since_created * 0.001000000047497451f,
+                proj.dx + (a2[0] * proj.time_since_created * 0.001000000047497451f),
+                proj.dy2 + (a2[1] * proj.time_since_created * 0.001000000047497451f),
                 res[0],
                 res[1]);
 
@@ -459,7 +465,7 @@ void projectile_system::do_other_motion(projectile& proj) {
             0,
             get_row_by_x_and_y(
                 scene.type,
-                static_cast<int>(std::max(40.0f, proj.x)),
+                static_cast<int>(std::max(40.0F, proj.x)),
                 static_cast<int>(proj.y)));
 
         break;
@@ -479,7 +485,7 @@ void projectile_system::do_other_motion(projectile& proj) {
         break;
 
     default:
-        proj.x += 3.329999923706055f;
+        proj.x += 3.329999923706055F;
 
         if (proj.motion_type == projectile_motion_type::switch_way) {
             proj.y += proj.dy2;

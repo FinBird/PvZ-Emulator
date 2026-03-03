@@ -135,7 +135,7 @@ void griditem::to_json(
 }
 
 void reanim::get_frame_status(reanim_frame_status& rfs) const {
-    float current_frame = progress * (n_frames - 1) + begin_frame;
+    float current_frame = (progress * (n_frames - 1)) + begin_frame;
 
     double floored_current_frame = floor(current_frame);
 
