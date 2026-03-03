@@ -90,7 +90,7 @@ bool plant_magnetshroom::attack_zombie(plant& p) {
         }
 
         if (zr.is_overlap_with_circle(p.x, p.y, z.is_eating ? 320 : 270)) {
-            auto d = sqrt(pow(p.x - z.x, 2) + pow(p.y - z.y, 2)) + row_diff * 80;
+            auto d = sqrt(pow(p.x - z.x, 2) + pow(p.y - z.y, 2)) + (row_diff * 80);
             if (target == nullptr || dist > d) {
                 target = &z;
                 dist = d;
@@ -146,11 +146,11 @@ void plant_magnetshroom::attack_ladder(plant& p) {
 
     for (auto& item : scene.griditems) {
         if (item.type == griditem_type::ladder) {
-            auto d1 = abs(static_cast<int>(item.col) - static_cast<int>(item.col));
-            auto d2 = abs(static_cast<int>(item.row) - static_cast<int>(item.row));
+            auto d1 = abs(static_cast<int>(p.col) - static_cast<int>(item.col));
+            auto d2 = abs(static_cast<int>(p.row) - static_cast<int>(item.row));
 
             if (std::max(d1, d2) <= 2) {
-                auto d = d1 * 0.05000000074505806 + std::max(d1, d2);
+                auto d = (d1 * 0.05000000074505806) + std::max(d1, d2);
 
                 if (target == nullptr || dist > d) {
                     target = &item;
@@ -160,7 +160,7 @@ void plant_magnetshroom::attack_ladder(plant& p) {
         }
     }
 
-    if (target) {
+    if (target != nullptr) {
         p.status = plant_status::magnetshroom_working;
         p.countdown.status = 1500;
         p.set_reanim(plant_reanim_name::anim_shooting, reanim_type::once, 12);
