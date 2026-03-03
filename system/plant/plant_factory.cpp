@@ -137,7 +137,8 @@ bool plant_factory::can_plant(
         return false;
     }
 
-    bool has_grave, has_crater;
+    bool has_grave = false;
+    bool has_crater = false;
     is_covered_by_griditem(row, col, has_grave, has_crater);
 
     if (has_crater) {
@@ -169,11 +170,11 @@ bool plant_factory::can_plant(
         (scene.type == scene_type::pool || scene.type == scene_type::fog) &&
         (row == 2 || row == 3);
 
-    bool has_pot = status.base &&
+    bool has_pot = (status.base != nullptr) &&
         status.base->type == plant_type::flower_pot &&
         status.base->edible != plant_edible_status::invisible_and_edible;
 
-    bool has_lily = status.base &&
+    bool has_lily = (status.base != nullptr) &&
         status.base->type == plant_type::lily_pad &&
         status.base->edible != plant_edible_status::invisible_and_edible;
 
@@ -205,7 +206,7 @@ bool plant_factory::can_plant(
 
     case plant_type::coffee_bean:
         return status.coffee_bean == nullptr &&
-            status.content &&
+            (status.content != nullptr) &&
             status.content->is_sleeping &&
             status.content->countdown.awake == 0 &&
             status.content->edible != plant_edible_status::invisible_and_edible;
@@ -213,7 +214,7 @@ bool plant_factory::can_plant(
     case plant_type::pumpkin:
         return (!is_roof_scene || has_pot) &&
             (!is_water_row ||
-                status.content && status.content->type == plant_type::cattail ||
+                (status.content != nullptr) && status.content->type == plant_type::cattail ||
                 has_lily) &&
             (status.content == nullptr ||
             status.content->type != plant_type::cob_cannon) &&
@@ -475,18 +476,18 @@ plant* plant_factory::plant(
     auto& status = scene.plant_map[row][col];
 
     bool is_gloom_awake = false;
-    unsigned int gloom_awake_countdown;
+    unsigned int gloom_awake_countdown = 0;
 
     switch (target_type) {
     case plant_type::wallnut:
     case plant_type::tallnut:
-        if (status.content && status.content->type == target_type) {
+        if ((status.content != nullptr) && status.content->type == target_type) {
             destroy(*status.content);
         }
         break;
 
     case plant_type::pumpkin:
-        if (target_type == plant_type::pumpkin && status.pumpkin) {
+        if (target_type == plant_type::pumpkin && (status.pumpkin != nullptr)) {
             destroy(*status.pumpkin);
         }
         break;
@@ -497,7 +498,7 @@ plant* plant_factory::plant(
     case plant_type::winter_melon:
     case plant_type::gold_magnet:
     case plant_type::spikerock:
-        if (status.content) {
+        if (status.content != nullptr) {
             if (target_type == plant_type::gloomshroom) {
                 gloom_awake_countdown = status.content->countdown.awake;
                 is_gloom_awake = !status.content->is_sleeping;
@@ -508,13 +509,13 @@ plant* plant_factory::plant(
         break;
 
     case plant_type::cattail:
-        if (status.base) {
+        if (status.base != nullptr) {
             destroy(*status.base);
         }
         break;
         
     case plant_type::cob_cannon:
-        if (status.content) {
+        if (status.content != nullptr) {
             destroy(*status.content);
         }
 
@@ -533,13 +534,10 @@ plant* plant_factory::plant(
 
     scene.sun.sun -= get_cost(target_type);
 
-    auto p = &create(type, row, col, imitater_type);
+    auto *p = &create(type, row, col, imitater_type);
 
     if (p->type == plant_type::gloomshroom && is_gloom_awake) {
-        if (is_gloom_awake) {
-            p->set_sleep(false);
-        }
-
+        p->set_sleep(false);
         p->countdown.awake = gloom_awake_countdown;
     }
 
@@ -552,7 +550,7 @@ void plant_factory::destroy(object::plant& p) {
     p.is_dead = true;
 
     if (p.type == plant_type::tangle_kelp && p.target != -1) {
-        if (auto z = scene.zombies.get(p.target)) {
+        if (auto *z = scene.zombies.get(p.target)) {
             zombie_factory.destroy(*z);
         }
     }
