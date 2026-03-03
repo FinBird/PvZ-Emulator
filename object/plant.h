@@ -127,13 +127,13 @@ enum class plant_status {
 };
 
 enum class attack_flags {
-    ground = 0x1,
-    flying_balloon = 0x2,
-    lurking_snorkel = 0x4,
-    animating_zombies = 0x10,
-    dying_zombies = 0x20,
-    digging_digger = 0x40,
-    hypno_zombies = 0x80,
+    ground = 0x1,             // 地面目标
+    flying_balloon = 0x2,     // 飞行目标（气球）
+    lurking_snorkel = 0x4,    // 潜水目标
+    animating_zombies = 0x10, // 动画中/特殊动作僵尸
+    dying_zombies = 0x20,     // 正在死亡的僵尸
+    digging_digger = 0x40,    // 正在挖掘的矿工
+    hypno_zombies = 0x80      // 被魅惑的僵尸
 };
 
 template <typename T>
@@ -147,9 +147,9 @@ unsigned int operator|(T a, attack_flags f) {
 }
 
 enum class plant_edible_status {
-    visible_and_edible = 0,
-    invisible_and_edible = 1,
-    invisible_and_not_edible = 2
+    visible_and_edible = 0,      // 可见且可被吃（常规）
+    invisible_and_edible = 1,    // 不可见但可吃（如某些埋在地下的状态）
+    invisible_and_not_edible = 2 // 不可见且不可吃（如已压地或彻底消失）
 };
 
 enum class plant_direction {
@@ -217,6 +217,7 @@ public:
     bool is_dead;
     bool is_smashed;
     bool is_sleeping;
+    bool is_imitater;
     bool can_attack;
     bool ignore_garg_smash;
     bool ignore_jack_explode;
