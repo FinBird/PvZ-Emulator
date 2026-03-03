@@ -132,7 +132,8 @@ void plant_system::launch(plant& p,
         break;
     }
 
-    int x, y;
+    int x = 0;
+    int y = 0;
     switch (p.type) {
     case plant_type::puffshroom:
         x = p.x + 40;

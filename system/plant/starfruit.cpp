@@ -37,8 +37,8 @@ bool plant_starfruit::has_target(object::plant& p) {
             zr.width += 10;
         }
 
-        int hzw = zr.width / 2 + zr.x;
-        int hzh = zr.height / 2 + zr.y;
+        int hzw = (zr.width / 2) + zr.x;
+        int hzh = (zr.height / 2) + zr.y;
 
         auto t = sqrt(
             pow(hzw - static_cast<double>(px), 2) +
@@ -47,12 +47,12 @@ bool plant_starfruit::has_target(object::plant& p) {
 
         auto predict = zombie_base(scene).predict_after(z, static_cast<float>(t));
 
-        if (px < predict + zr.width / 2 && predict - zr.width / 2 < px) {
+        if (px < predict + (zr.width / 2) && predict - (zr.width / 2) < px) {
             return true;
         }
 
-        int x_predict = static_cast<int>(predict + zr.width / 2 - px);
-        int y_predict = static_cast<int>(zr.y + zr.height / 2 - py);
+        int x_predict = static_cast<int>(predict + (zr.width / 2) - px);
+        int y_predict = (zr.y + (zr.height / 2) - py);
 
         auto deg = atan2(y_predict, x_predict) * 57.2957763671875;
 
@@ -71,8 +71,8 @@ bool plant_starfruit::has_target(object::plant& p) {
 void plant_starfruit::attack(plant& p) {
     projectile_factory projectile_factory(scene);
 
-    constexpr float v_cos = 2.883864528529686f;
-    constexpr float v_sin = 1.6649999618530275f;
+    constexpr float v_cos = 2.883864528529686F;
+    constexpr float v_sin = 1.6649999618530275F;
 
     for (int i = 0; i < 5; i++) {
         auto& proj = projectile_factory.create(
@@ -86,18 +86,18 @@ void plant_starfruit::attack(plant& p) {
 
         switch (i) {
         case 0:
-            proj.dx = -3.3299999f;
+            proj.dx = -3.3299999F;
             proj.dy2 = 0;
             break;
 
         case 1:
             proj.dx = 0;
-            proj.dy2 = 3.3299999f;
+            proj.dy2 = 3.3299999F;
             break;
 
         case 2:
             proj.dx = 0;
-            proj.dy2 = -3.3299999f;
+            proj.dy2 = -3.3299999F;
             break;
 
         case 3:
