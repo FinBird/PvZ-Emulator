@@ -58,7 +58,24 @@ enum class plant_type {
     gold_magnet = 0x2D,
     spikerock = 0x2E,
     cob_cannon = 0x2F,
-    imitater = 0x30
+    imitater = 0x30,
+
+    // IZombie 卡片类型
+    seed_zombie = 0x3C,        // 普通僵尸
+    seed_cone_head = 0x3D,     // 路障僵尸
+    seed_pole_vaulting = 0x3E, // 撑杆僵尸
+    seed_bucket_head = 0x3F,   // 桶头僵尸
+    seed_ladder = 0x40,        // 梯子僵尸
+    seed_digger = 0x41,        // 矿工僵尸
+    seed_bungee = 0x42,        // 蹦极僵尸
+    seed_football = 0x43,      // 橄榄球僵尸
+    seed_balloon = 0x44,       // 气球僵尸
+    seed_screen_door = 0x45,   // 铁门僵尸
+    seed_zomboni = 0x46,       // 冰车僵尸
+    seed_pogo = 0x47,          // 跳跳僵尸
+    seed_dancing = 0x48,       // 舞王僵尸
+    seed_gargantuar = 0x49,    // 巨人僵尸
+    seed_imp = 0x4A            // 小鬼僵尸
 };
 
 enum class plant_status {
