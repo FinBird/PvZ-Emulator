@@ -353,3 +353,8 @@ healthchecksdb
 
 .clang-format
 .vscode
+
+# Generated and temporary files
+compile_commands.json
+.xmake/
+.cache/
