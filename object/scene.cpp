@@ -21,20 +21,28 @@ scene_type str_to_scene_type(const std::string& str) {
 }
 
 std::string scene_type_to_str(scene_type scene) {
-    if (scene == scene_type::day) {
+  switch (scene) {
+    case scene_type::day:
         return "DE";
-    } else if (scene == scene_type::night) {
+    case scene_type::night:
         return "NE";
-    } else if (scene == scene_type::pool) {
+    case scene_type::pool:
         return "PE";
-    } else if (scene == scene_type::fog) {
+    case scene_type::fog:
         return "FE";
-    } else if (scene == scene_type::roof) {
+    case scene_type::roof:
         return "RE";
-    } else if (scene == scene_type::moon_night) {
+    case scene_type::moon_night:
         return "ME";
-    } else {
+    case scene_type::mushroom:
+        return "MG";
+    case scene_type::treeofwisdom:
+        return "WT";
+    case scene_type::zombiquarium:
+        return "AQ";
+    default:
         assert(false && "unreachable");
+        return {}; // 抑制编译警告
     }
 }
 
