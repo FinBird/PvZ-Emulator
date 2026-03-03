@@ -67,19 +67,15 @@ bool plant_factory::can_plant_advanced_plant(
 }
 
 bool plant_factory::is_pos_valid(unsigned row, unsigned col) const {
-    if (scene.type == scene_type::pool || scene.type == scene_type::fog) {
-        if (row > 5) {
-            return false;
-        }
-    } else if (row > 4) {
-        return false;
-    }
+    if (col > 8) return false;
 
-    if (col > 8) {
-        return false;
+    switch (scene.type) {
+        case scene_type::pool:
+        case scene_type::fog:
+            return row <= 5;
+        default:
+            return row <= 4;
     }
-
-    return true;
 }
 
 bool plant_factory::is_not_covered_by_ice_path(unsigned row, unsigned col) const {
