@@ -527,8 +527,9 @@ void projectile_system::update() {
         if (proj.motion_type == projectile_motion_type::parabola) {
             proj.y += diff;
             proj.dy1 = proj.dy1 - diff;
+        } else {
+            proj.shadow_y += diff;
         }
-
         proj.shadow_y += diff;
 
         proj.int_x = static_cast<int>(proj.x);
