@@ -35,23 +35,9 @@ bool rect::is_overlap_with_circle(int px, int py, int r) {
 }
 
 float rect::get_overlap_len(const rect& r) {
-    float near_l, far_l, far_x;
-    
-    if (r.x >= this->x) {
-        near_l = static_cast<float>(this->x + this->width);
-        far_l = static_cast<float>(r.x + r.width);
-        far_x = static_cast<float>(r.x);
-    } else {
-        near_l = static_cast<float>(r.x + r.width);
-        far_l = static_cast<float>(this->x + this->width);
-        far_x = static_cast<float>(this->x);
-    }
-
-    if (near_l > far_x && near_l > far_l) {
-        return far_l - far_x;
-    } else {
-        return near_l - far_x;
-    }
+    int left = std::max(x, r.x);
+    int right = std::min(x + width, r.x + r.width);
+    return static_cast<float>(right - left);
 }
 
 void rect::to_json(rapidjson::Writer<rapidjson::StringBuffer>& writer) {
