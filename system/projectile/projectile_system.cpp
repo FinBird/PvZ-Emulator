@@ -134,17 +134,19 @@ bool projectile_system::is_covered_by_suppter(
     }
 
     int row_diff = std::abs(static_cast<int>(proj.row) - static_cast<int>(z.row));
+
     if (proj.type == projectile_type::fire_pea && row_diff != 0) {
         return false;
     }
+
     if (row_diff > 1) {
         return false;
     }
 
     rect splash_range;
-    int splash_size = (proj.type == projectile_type::fire_pea) ? 160 : 100;
-    splash_range.x = proj.int_x - (splash_size / 2);
-    splash_range.width = splash_size;
+    int splash_radius = (proj.type == projectile_type::fire_pea) ? 40 : 50;
+    splash_range.x = proj.int_x - splash_radius;
+    splash_range.width = splash_radius * 2;
     splash_range.y = proj.int_y - 40;
     splash_range.height = 80;
 
@@ -163,22 +165,23 @@ void projectile_system::suppter_attack(projectile& proj, zombie* main_target) {
         }
     }
 
-    int o = projectile::DAMAGE[static_cast<int>(proj.type)];
-    int m = proj.type == projectile_type::fire_pea ?  o : 7 * o;
-
-    int dmg = o / 3;
-
-    if (n * dmg > m) {
-        dmg = m / n >= 1 ? m / n : 1;
-    }
+    int base_dmg = projectile::DAMAGE[static_cast<int>(proj.type)];
+    int splash_dmg = std::max(base_dmg / 3, 1);
 
     for (auto *z : targets) {
-        auto flags = proj.get_flags_with_zombie(*z);
+        unsigned int flags = proj.get_flags_with_zombie(*z);
 
         if (z == main_target) {
-            damage.take(*z, o, flags);
+            damage.take(*z, base_dmg, flags);
         } else {
-            damage.take(*z, dmg, flags);
+            damage.take(*z, splash_dmg, flags);
+        }
+
+        if (proj.type == projectile_type::wintermelon) {
+            debuff.set_slowed(*z, 1000); 
+        } 
+        else if (proj.type == projectile_type::fire_pea) {
+            debuff.remove_by_fire_pea(*z); 
         }
     }
 }
