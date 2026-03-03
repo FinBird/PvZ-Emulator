@@ -29,18 +29,33 @@ void plant_sunshroom::init(plant& p, unsigned int row, unsigned int col) {
 }
 
 void plant_sunshroom::update(plant& p) {
-    if (p.status == plant_status::sunshroom_small) {
-        if (p.countdown.status == 0) {
-            p.set_reanim(plant_reanim_name::anim_grow, reanim_type::once, 12);
-            p.status = plant_status::sunshroom_grow;
-        }
+    if (p.is_sleeping) {
+        return;
+    }
 
-        produce_sun(p);
-    } else if (p.status != plant_status::sunshroom_grow) {
-        produce_sun(p);
-    } else if (p.reanim.n_repeated > 0) {
-        p.set_reanim(plant_reanim_name::anim_bigidle, reanim_type::repeat, rng.randfloat(12, 15));
-        p.status = plant_status::sunshroom_big;
+    switch (p.status) {
+        case plant_status::sunshroom_small:
+            produce_sun(p); 
+            if (p.countdown.status == 0) {
+                p.set_reanim(plant_reanim_name::anim_grow, reanim_type::once, 12);
+                p.status = plant_status::sunshroom_grow;
+            }
+            break;
+
+        case plant_status::sunshroom_grow:
+            if (p.reanim.n_repeated > 0) {
+                p.set_reanim(plant_reanim_name::anim_bigidle, reanim_type::repeat, rng.randfloat(12, 15));
+                p.status = plant_status::sunshroom_big;
+            }
+            break;
+
+        case plant_status::sunshroom_big:
+            produce_sun(p);
+            break;
+
+        default:
+            assert(false && "unreachable");
+            break;
     }
 }
 
