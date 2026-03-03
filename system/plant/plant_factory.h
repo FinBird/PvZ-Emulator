@@ -15,22 +15,22 @@ class plant_factory {
     system::plant_subsystems subsystems;
     system::rng rng;
 
-    bool is_pos_valid(unsigned row, unsigned col) const;
-    bool is_not_covered_by_ice_path(unsigned row, unsigned col) const;
+    [[nodiscard]] bool is_pos_valid(unsigned row, unsigned col) const;
+    [[nodiscard]] bool is_not_covered_by_ice_path(unsigned row, unsigned col) const;
     void is_covered_by_griditem(
         unsigned row,
         unsigned col,
         bool& has_grave,
         bool& has_crater) const;
 
-    bool can_plant_advanced_plant(
-        grid_plant_status& status,
+    [[nodiscard]] bool can_plant_advanced_plant(
+        const grid_plant_status& status,
         object::plant_type advanced) const;
 
-    unsigned int get_cost(object::plant_type type) const;
+    [[nodiscard]] unsigned int get_cost(object::plant_type type) const;
 
 public:
-    bool can_plant(
+    [[nodiscard]] bool can_plant(
         unsigned int row,
         unsigned int col,
         object::plant_type type,

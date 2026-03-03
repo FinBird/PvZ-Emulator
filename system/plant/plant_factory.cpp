@@ -7,7 +7,7 @@ namespace pvz_emulator::system {
 using namespace pvz_emulator::object;
 
 bool plant_factory::can_plant_advanced_plant(
-    grid_plant_status& status,
+    const grid_plant_status& status,
     plant_type advanced) const
 {
     if (advanced != plant_type::cattail &&
