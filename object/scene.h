@@ -28,12 +28,27 @@ struct grid_plant_status {
 };
 
 enum class scene_type {
-    day = 0x0,
-    night = 0x1,
-    pool = 0x2,
-    fog = 0x3,
-    roof = 0x4,
-    moon_night = 0x5,
+    day = 0x0,        // 白天
+    night = 0x1,      // 夜晚
+    pool = 0x2,       // 泳池
+    fog = 0x3,        // 浓雾
+    roof = 0x4,       // 屋顶
+    moon_night = 0x5, // 月夜
+
+    /*TODO: 特殊场景*/
+    mushroom = 0x6,     // 蘑菇园
+    greenhouse = 0x7,   // 禅境花园
+    zombiquarium = 0x8, // 僵尸水族馆
+    treeofwisdom = 0x9, // 智慧树
+    /*TODO: 特殊场景*/
+};
+
+enum class grid_square_type : std::uint8_t {
+    none = 0x0,        // 无
+    grass = 0x1,       // 草地
+    dirt = 0x2,        // 弹坑
+    pool = 0x3,        // 泳池
+    high_ground = 0x4, // 高地
 };
 
 scene_type str_to_scene_type(const std::string& str);

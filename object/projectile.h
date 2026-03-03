@@ -6,29 +6,30 @@ namespace pvz_emulator::object {
 
 enum class projectile_type {
     none = -1,
-    pea = 0x0,
-    snow_pea = 0x1,
-    cabbage = 0x2,
-    melon = 0x3,
-    puff = 0x4,
-    wintermelon = 0x5,
-    fire_pea = 0x6,
-    star = 0x7,
-    cactus = 0x8,
-    basketball = 0x9,
-    kernel = 0xA,
-    cob_cannon = 0xB,
-    butter = 0xC
+    pea = 0x0,         // 豌豆
+    snow_pea = 0x1,    // 寒冰豌豆
+    cabbage = 0x2,     // 卷心菜
+    melon = 0x3,       // 西瓜
+    puff = 0x4,        // 孢子（小喷菇）
+    wintermelon = 0x5, // 冰西瓜弹
+    fire_pea = 0x6,    // 火焰豌豆
+    star = 0x7,        // 杨桃子弹（星星）
+    cactus = 0x8,      // 仙人掌刺
+    basketball = 0x9,  // 篮球
+    kernel = 0xA,      // 玉米粒
+    cob_cannon = 0xB,  // 玉米炮弹
+    butter = 0xC,      // 黄油
+    zombie_pea = 0xD   // 僵尸豌豆 (TODO)
 };
 
 enum class projectile_motion_type {
-    straight = 0,
-    parabola = 1,
-    switch_way = 2,
-    puff = 5,
-    left_straight = 6,
-    starfruit = 7,
-    cattail = 9
+    straight = 0,      // 直线（如豌豆）
+    parabola = 1,      // 抛物线（如投手类）
+    switch_way = 2,    // 换行（绕过障碍？）
+    puff = 5,          // 烟雾（喷击）
+    left_straight = 6, // 向左直线
+    starfruit = 7,     // 杨桃轨道
+    cattail = 9        // 香蒲轨道（追踪）
 };
 
 class scene;
