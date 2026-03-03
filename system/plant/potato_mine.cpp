@@ -15,7 +15,7 @@ void plant_potato_mine::update(plant& p) {
         break;
 
     case plant_status::potato_armed:
-        if (find_target(p, p.row, false)) {
+        if (find_target(p, p.row, false) != nullptr) {
             damage(scene).activate_plant(p);
         }
         break;
@@ -25,6 +25,7 @@ void plant_potato_mine::update(plant& p) {
             p.set_reanim(plant_reanim_name::anim_rise, reanim_type::once, 18);
             p.status = plant_status::potato_sprout_out;
         }
+        break;
 
     default:
         break;
