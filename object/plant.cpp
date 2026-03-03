@@ -515,7 +515,7 @@ const char* plant::status_to_string(plant_status status) {
         return "kernelpult_launch_butter";
     case plant_status::umbrella_leaf_block: return "umbrella_leaf_block";
     case plant_status::umbrella_leaf_shrink: return "umbrella_leaf_shrink";
-    case plant_status::imitater_explode: return "imitater_explode";
+    case plant_status::imitater_morphing: return "imitater_morphing";
     case plant_status::flower_pot_placed: return "flower_pot_placed";
     case plant_status::lily_pad_placed: return "lily_pad_placed";
     default:

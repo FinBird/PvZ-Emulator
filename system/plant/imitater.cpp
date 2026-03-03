@@ -6,14 +6,14 @@ namespace pvz_emulator::system {
 using namespace pvz_emulator::object;
 
 void plant_imitater::update(plant& p) {
-    if (p.status == plant_status::imitater_explode) {
+    if (p.status == plant_status::imitater_morphing) {
         if (p.reanim.n_repeated > 0) {
             plant_factory plant_factory(scene);
             plant_factory.destroy(p);
             plant_factory.create(p.imitater_target, p.row, p.col);
         }
     } else if (p.countdown.status == 0) {
-        p.status = plant_status::imitater_explode;
+        p.status = plant_status::imitater_morphing;
         p.set_reanim(plant_reanim_name::anim_explode, reanim_type::once, 26);
     }
 }
