@@ -47,7 +47,7 @@ zombie& zombie_factory::create(zombie_type type, int specified_row)
         break;
 
     case zombie_type::backup_dancer:
-        subsystems.backup_dancer.init(z, row, wave);
+        subsystems.backup_dancer.init(z, row);
         break;
 
     case zombie_type::snorkel:

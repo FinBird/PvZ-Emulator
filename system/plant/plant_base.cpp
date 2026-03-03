@@ -98,7 +98,7 @@ void plant_base::init(
         p.set_reanim_frame(plant_reanim_name::anim_idle);
     }
 
-    if (p.max_boot_delay <= 0) {
+    if (p.max_boot_delay <= 0 || scene.disable_plant_boot_delay) {
         p.countdown.generate = 0;
     } else if (p.type == plant_type::sunflower ||
         p.type == plant_type::twin_sunflower ||
@@ -106,7 +106,7 @@ void plant_base::init(
     {
         p.countdown.generate = rng.randint(p.max_boot_delay / 2 - 299) + 300;
     } else {
-        p.countdown.generate = rng.randint(p.max_boot_delay + 1);
+        p.countdown.generate = rng.randint(p.max_boot_delay) + 1;
     }
 }
 

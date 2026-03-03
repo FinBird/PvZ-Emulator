@@ -39,10 +39,10 @@ void zombie_backup_dancer::update(zombie& z) {
     }
 }
 
-void zombie_backup_dancer::init(zombie& z, unsigned int row, unsigned int spawn_wave) {
+void zombie_backup_dancer::init(zombie& z, unsigned int row) {
     z._ground = _ground.data();
 
-    zombie_base::init(z, zombie_type::backup_dancer, row, spawn_wave);
+    zombie_base::init(z, zombie_type::backup_dancer, row);
 
     z.status = zombie_status::dancing_walking;
 
@@ -51,3 +51,4 @@ void zombie_backup_dancer::init(zombie& z, unsigned int row, unsigned int spawn_
     set_common_fields(z);
 }
 
+}

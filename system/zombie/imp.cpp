@@ -40,3 +40,4 @@ void zombie_imp::init(zombie &z, unsigned int row) {
     set_common_fields(z);
 }
 
+}

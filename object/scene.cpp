@@ -60,7 +60,9 @@ scene::scene(const scene& s) :
     disable_garg_throw_imp(s.disable_garg_throw_imp),
     disable_crater(s.disable_crater),
     lock_dx(s.lock_dx),
-    lock_dx_val(s.lock_dx_val)
+    lock_dx_val(s.lock_dx_val),
+    disable_plant_boot_delay(s.disable_plant_boot_delay),
+    fog(s.fog)
 {
     memset(&plant_map, 0, sizeof(plant_map));
 
@@ -331,6 +333,13 @@ void scene::reset() {
     disable_crater = false;
     lock_dx = false;
     lock_dx_val = 0.0f;
+    disable_plant_boot_delay = false;
+    if (type == scene_type::fog) {
+        fog.init_fog();
+    } else {
+        fog.column.fill(0);
+        fog.blown_countdown = 0;
+    }
 
     zombies.clear();
     plants.clear();

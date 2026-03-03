@@ -145,7 +145,7 @@ public:
 
     bool is_game_over;
 
-/* �����ò��ֿ�ʼ */
+    /* 可配置部分开始 */
     bool ignore_game_over;
     bool is_zombie_dance;
     bool is_future_enabled;
@@ -155,7 +155,8 @@ public:
     bool disable_crater;
     bool lock_dx;
     float lock_dx_val;
-/* �����ò��ֽ��� */
+    bool disable_plant_boot_delay;
+    /* 可配置部分结束 */
 
     scene(scene_type t) : type(t),
         rng(std::random_device()()),
