@@ -24,7 +24,7 @@ void plant_base::init(
     p.row = row;
     p.col = col;
 
-    p.x = 80 * col + 40;
+    p.x = (80 * col) + 40;
     p.y = get_y_by_row_and_col(scene.type, row, col);
 
     p.cannon.x = -1;
@@ -62,7 +62,7 @@ void plant_base::init(
     p.ignore_garg_smash = false;
     p.ignore_jack_explode = false;
 
-    p.explode = {0, 0, 0};
+    p.explode = {.from_upper=0, .from_same=0, .from_lower=0};
 
     p.threepeater_time_since_first_shot = 0;
 
@@ -86,8 +86,6 @@ void plant_base::init(
     p.reanim.fps = rng.randfloat(10, 15);
 
     p.target = -1;
-    
-    memset(&p.reanim, 0, sizeof(p.reanim));
 
     p.init_reanim();
 
@@ -104,7 +102,7 @@ void plant_base::init(
         p.type == plant_type::twin_sunflower ||
         p.type == plant_type::sunshroom)
     {
-        p.countdown.generate = rng.randint(p.max_boot_delay / 2 - 299) + 300;
+        p.countdown.generate = rng.randint((p.max_boot_delay / 2) - 299) + 300;
     } else {
         p.countdown.generate = rng.randint(p.max_boot_delay) + 1;
     }
@@ -119,7 +117,7 @@ zombie* plant_base::find_target(const plant& p, unsigned int row, bool is_alt_at
     double weight = 0;
     zombie* result = nullptr;
 
-    for (const auto& z : scene.zombies) {
+    for (auto& z : scene.zombies) {
         if ((!z.is_not_dying || is_target_of_kelp(scene, z)) &&
             (p.type == plant_type::potato_mine ||
                 p.type == plant_type::chomper ||
@@ -184,13 +182,13 @@ zombie* plant_base::find_target(const plant& p, unsigned int row, bool is_alt_at
             z.get_hit_box(zr);
 
             if (pr.get_overlap_len(zr) >= -overlap) {
-                double w = -zr.x;
+                double w = -static_cast<double>(zr.x);
 
                 if (p.type == plant_type::cattail) {
-                    auto x1 = zr.x + zr.width / 2;
-                    auto y1 = zr.y + zr.height / 2;
-                    auto x2 = p.x + 40;
-                    auto y2 = p.y + 40;
+                    auto x1 = static_cast<double>(zr.x) + (zr.width / 2.0);
+                    auto y1 = static_cast<double>(zr.y) + (zr.height / 2.0);
+                    auto x2 = static_cast<double>(p.x) + 40.0;
+                    auto y2 = static_cast<double>(p.y) + 40.0;
 
                     auto d = sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2));
                     w = -d;
@@ -204,7 +202,7 @@ zombie* plant_base::find_target(const plant& p, unsigned int row, bool is_alt_at
 
                 if (result == nullptr || w > weight) {
                     weight = w;
-                    result = &const_cast<zombie &>(z);
+                    result = &z;
                 }
             }
         }
