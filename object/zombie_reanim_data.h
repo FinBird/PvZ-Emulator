@@ -1,8 +1,9 @@
 #pragma once
 
+#include <cstdint>
 namespace pvz_emulator::object {
 
-enum class zombie_reanim_name {
+enum class zombie_reanim_name : std::uint8_t {
     _ground,                // 接地
     anim_smash,             // 砸击
     anim_dolphinjump,       // 海豚跳

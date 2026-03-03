@@ -8,7 +8,7 @@
 
 namespace pvz_emulator::object {
 
-enum class plant_type {
+enum class plant_type : std::int8_t {
     none = -1,
     pea_shooter = 0x0,     // 豌豆射手
     sunflower = 0x1,       // 向日葵
@@ -78,7 +78,7 @@ enum class plant_type {
     seed_imp = 0x4A            // 小鬼僵尸
 };
 
-enum class plant_status {
+enum class plant_status : std::uint8_t {
     idle = 0x0,                        // 空闲
     wait = 0x1,                        // 等待
     work = 0x2,                        // 工作/生效中
@@ -126,7 +126,7 @@ enum class plant_status {
     lily_pad_placed = 0x30             // 睡莲放置
 };
 
-enum class attack_flags {
+enum class attack_flags : std::uint8_t {
     ground = 0x1,             // 地面目标
     flying_balloon = 0x2,     // 飞行目标（气球）
     lurking_snorkel = 0x4,    // 潜水目标
@@ -146,13 +146,13 @@ unsigned int operator|(T a, attack_flags f) {
     return static_cast<unsigned int>(a) | static_cast<unsigned int>(f);
 }
 
-enum class plant_edible_status {
+enum class plant_edible_status : std::uint8_t {
     visible_and_edible = 0,      // 可见且可被吃（常规）
     invisible_and_edible = 1,    // 不可见但可吃（如某些埋在地下的状态）
     invisible_and_not_edible = 2 // 不可见且不可吃（如已压地或彻底消失）
 };
 
-enum class plant_direction {
+enum class plant_direction : std::int8_t {
     left = 1,
     right = -1
 };

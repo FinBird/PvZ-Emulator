@@ -1,6 +1,7 @@
+#include <cstdint>
 namespace pvz_emulator::object {
 
-enum class plant_reanim_name {
+enum class plant_reanim_name : std::uint8_t {
     anim_charge,            // 充能
     anim_unarmed_idle,      // 未装弹待机
     anim_block,             // 阻挡

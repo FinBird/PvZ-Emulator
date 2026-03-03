@@ -1,16 +1,15 @@
 #pragma once
-
+#include <cstdint>
 #include "object/scene.h"
 #include "object/zombie.h"
 #include "object/plant.h"
-#include "system/rng.h"
 
 namespace pvz_emulator::system {
 
 int get_col_by_x(int x);
 
 inline int get_x_by_col(int col) {
-    return 80 * col + 40;
+    return (80 * col) + 40;
 }
 
 float get_y_by_col(object::scene_type s, unsigned int row, unsigned int col);
@@ -30,7 +29,7 @@ bool is_slowed(object::scene& scene, object::zombie& z);
 
 bool is_not_movable(object::scene& scene, object::zombie& z);
 
-enum class zombie_attack_type {
+enum class zombie_attack_type : std::uint8_t {
     smash_or_eat = 0,
     crush = 1,
     jump = 2,

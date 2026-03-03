@@ -9,7 +9,7 @@
 
 namespace pvz_emulator::object {
 
-enum class zombie_type {
+enum class zombie_type : std::int8_t {
     none = -1,
     zombie = 0x0,                // 普通僵尸
     flag = 0x1,                  // 摇旗僵尸
@@ -46,7 +46,7 @@ enum class zombie_type {
     zombie_tallnut_head = 0x26,  // 高坚果僵尸 (TODO)
 };
 
-enum class zombie_status {
+enum class zombie_status : std::uint8_t {
     walking = 0x0,                         // 步行
     dying = 0x1,                           // 正在死亡
     dying_from_instant_kill = 0x2,         // 瞬间爆发死亡 (如被炸)
@@ -144,7 +144,7 @@ enum class zombie_status {
     squash_done_falling = 0x5f,            // 倭瓜下砸结束（针对僵尸）
 };
 
-enum class zombie_action {
+enum class zombie_action : std::uint8_t {
     none = 0x0,
     entering_pool = 0x1,
     leaving_pool = 0x2,
@@ -154,7 +154,7 @@ enum class zombie_action {
     fall_from_sky = 0x9
 };
 
-enum class zombie_accessories_type_1 {
+enum class zombie_accessories_type_1 : std::uint8_t {
     none = 0x0,
     roadcone = 0x1,
     bucket = 0x2,
@@ -162,14 +162,14 @@ enum class zombie_accessories_type_1 {
     miner_hat = 0x4
 };
 
-enum class zombie_accessories_type_2 {
+enum class zombie_accessories_type_2 : std::uint8_t {
     none = 0x0,
     screen_door = 0x1,
     newspaper = 0x2,
     ladder = 0x3,
 };
 
-enum class zombie_dance_cheat {
+enum class zombie_dance_cheat : std::uint8_t {
     none = 0x0,
     fast = 0x1,
     slow = 0x2,
@@ -304,7 +304,7 @@ public:
 
     bool has_pogo_status() const {
         return status >= zombie_status::pogo_with_stick &&
-            static_cast<int>(status) <= 28;
+            static_cast<int>(status) <= static_cast<int>(zombie_status::pogo_forward_across2);
     }
 
     bool can_be_slowed() const;

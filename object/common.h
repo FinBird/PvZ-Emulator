@@ -1,5 +1,4 @@
 #pragma once
-#include <string>
 #include "rapidjson/writer.h"
 #include "rapidjson/stringbuffer.h"
 
@@ -22,7 +21,7 @@ struct rect {
     void to_json(rapidjson::Writer<rapidjson::StringBuffer>& writer);
 };
 
-enum class reanim_type {
+enum class reanim_type : std::uint8_t {
     repeat = 0,
     once = 1
 };

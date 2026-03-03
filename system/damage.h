@@ -11,7 +11,7 @@
 
 namespace pvz_emulator::system {
 
-enum class zombie_damage_flags {
+enum class zombie_damage_flags : std::uint8_t {
     ignore_accessory_2 = 0x1,
     not_reduce = 0x2,
     slow_effect = 0x4,

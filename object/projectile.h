@@ -1,10 +1,11 @@
 #pragma once
+#include "common.h"
 #include "rapidjson/writer.h"
 #include "rapidjson/stringbuffer.h"
 
 namespace pvz_emulator::object {
 
-enum class projectile_type {
+enum class projectile_type : std::int8_t {
     none = -1,
     pea = 0x0,         // 豌豆
     snow_pea = 0x1,    // 寒冰豌豆
@@ -22,7 +23,7 @@ enum class projectile_type {
     zombie_pea = 0xD   // 僵尸豌豆 (TODO)
 };
 
-enum class projectile_motion_type {
+enum class projectile_motion_type : std::uint8_t {
     straight = 0,      // 直线（如豌豆）
     parabola = 1,      // 抛物线（如投手类）
     switch_way = 2,    // 换行（绕过障碍？）

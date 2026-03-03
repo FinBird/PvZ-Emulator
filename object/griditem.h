@@ -4,7 +4,7 @@
 
 namespace pvz_emulator::object {
 
-enum class griditem_type {
+enum class griditem_type : std::uint8_t {
     none = 0x0,           // 无
     grave = 0x1,          // 墓碑
     crater = 0x2,         // 弹坑
