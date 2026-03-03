@@ -40,11 +40,6 @@ float rect::get_overlap_len(const rect& r) {
     return static_cast<float>(right - left);
 }
 
-bool rect::intersects(const rect &r) const {
-  return (x < r.x + r.width) && (x + width > r.x) && (y < r.y + r.height) &&
-         (y + height > r.y);
-}
-
 void rect::to_json(rapidjson::Writer<rapidjson::StringBuffer>& writer) {
     writer.StartObject();
     writer.Key("x");
