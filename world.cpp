@@ -53,6 +53,8 @@ bool world::update() {
 
     ice_path.update();
 
+    fog.update();
+
     if (scene.spawn.countdown.pool > 0) {
         --scene.spawn.countdown.pool;
     }
@@ -324,3 +326,4 @@ bool world::check_build(const check_list &plants) {
     return true;
 }
 
+}

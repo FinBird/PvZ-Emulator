@@ -33,6 +33,7 @@ public:
 	system::griditem_factory griditem_factory;
 	system::zombie_system zombie;
 	system::projectile_system projectile;
+	system::fog fog;
 
 private:
 	void clean_obj_lists();

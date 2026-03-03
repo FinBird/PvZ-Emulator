@@ -117,6 +117,19 @@ public:
         }
     } ice_path;
 
+    struct fog_data {
+        std::array<unsigned int, 9> column = {0, 0, 0, 0, 255, 255, 255, 255, 255};
+        unsigned int blown_countdown = 0;
+
+        fog_data() = default;
+        void init_fog() {
+            for (int i = 0; i < 9; i++) {
+                column[i] = (i >= 4) ? 255 : 0;
+            }
+            blown_countdown = 0;
+        }
+    } fog;
+
     struct card_data {
         plant_type type;
         plant_type imitater_type;
@@ -132,7 +145,7 @@ public:
 
     bool is_game_over;
 
-/* ¿ÉÅäÖÃ²¿·Ö¿ªÊ¼ */
+/* ï¿½ï¿½ï¿½ï¿½ï¿½Ã²ï¿½ï¿½Ö¿ï¿½Ê¼ */
     bool ignore_game_over;
     bool is_zombie_dance;
     bool is_future_enabled;
@@ -142,7 +155,7 @@ public:
     bool disable_crater;
     bool lock_dx;
     float lock_dx_val;
-/* ¿ÉÅäÖÃ²¿·Ö½áÊø */
+/* ï¿½ï¿½ï¿½ï¿½ï¿½Ã²ï¿½ï¿½Ö½ï¿½ï¿½ï¿½ */
 
     scene(scene_type t) : type(t),
         rng(std::random_device()()),
