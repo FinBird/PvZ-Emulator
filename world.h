@@ -4,6 +4,7 @@
 #include <string>
 #include <atomic>
 #include <thread>
+#include "fog.h"
 #include "object/scene.h"
 #include "system/sun.h"
 #include "system/spawn.h"
@@ -31,6 +32,8 @@ public:
 	system::plant_factory plant_factory;
 	system::zombie_factory zombie_factory;
 	system::griditem_factory griditem_factory;
+	system::projectile_factory projectile_factory;
+	system::debuff debuff;
 	system::zombie_system zombie;
 	system::projectile_system projectile;
 	system::fog fog;
@@ -50,8 +53,11 @@ public:
 		plant_factory(scene),
 		zombie_factory(scene),
 		griditem_factory(scene),
+		projectile_factory(scene),
+		debuff(scene),
 		zombie(scene),
-		projectile(scene)
+		projectile(scene),
+		fog(scene)
 	{}
 
 	world(const world& w) :
@@ -65,8 +71,11 @@ public:
 		plant_factory(scene),
 		zombie_factory(scene),
 		griditem_factory(scene),
+		projectile_factory(scene),
+		debuff(scene),
 		zombie(scene),
-		projectile(scene)
+		projectile(scene),
+		fog(scene)
 	{}
 
 	bool update();
