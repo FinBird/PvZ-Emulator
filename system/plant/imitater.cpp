@@ -6,7 +6,12 @@ namespace pvz_emulator::system {
 using namespace pvz_emulator::object;
 
 void plant_imitater::update(plant& p) {
+    if (p.is_dead || p.is_smashed) {
+        return;
+    }
     if (p.status == plant_status::imitater_morphing) {
+        p.edible = plant_edible_status::invisible_and_not_edible;
+
         if (p.reanim.n_repeated > 0) {
             plant_factory plant_factory(scene);
             plant_factory.destroy(p);
