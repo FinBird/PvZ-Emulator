@@ -184,20 +184,20 @@ unsigned int plant::get_attack_flags(bool is_alt_attack) const {
             attack_flags::lurking_snorkel |
             attack_flags::flying_balloon |
             attack_flags::ground |
-            0x8;
+            attack_flags::jumping;
 
     case plant_type::squash:
     case plant_type::cabbagepult:
     case plant_type::melonpult:
     case plant_type::kernelpult:
     case plant_type::winter_melon:
-        return attack_flags::lurking_snorkel | attack_flags::ground | 0x8;
+        return attack_flags::lurking_snorkel | attack_flags::ground | attack_flags::jumping;
 
     case plant_type::potato_mine:
         return attack_flags::digging_digger |
             attack_flags::lurking_snorkel |
             attack_flags::ground |
-            0x8;
+            attack_flags::jumping;
 
     case plant_type::puffshroom:
     case plant_type::scaredyshroom:

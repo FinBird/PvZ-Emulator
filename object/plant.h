@@ -8,7 +8,7 @@
 
 namespace pvz_emulator::object {
 
-enum class plant_type : std::int8_t {
+enum class plant_type : std::int32_t {
     none = -1,
     pea_shooter = 0x0,     // 豌豆射手
     sunflower = 0x1,       // 向日葵
@@ -59,6 +59,10 @@ enum class plant_type : std::int8_t {
     spikerock = 0x2E,      // 地刺王
     cob_cannon = 0x2F,     // 玉米加农炮
     imitater = 0x30,       // 模仿者
+    explode_o_nut = 0x31,  // 爆炸坚果
+    giant_wallnut = 0x32,  // 大坚果
+    sprout = 0x33,         // TODO:?
+    left_peater = 0x34,    // 左向双发射手
 
     // IZombie 卡片类型
     seed_zombie = 0x3C,        // 普通僵尸
@@ -126,10 +130,11 @@ enum class plant_status : std::uint8_t {
     lily_pad_placed = 0x30             // 睡莲放置
 };
 
-enum class attack_flags : std::uint8_t {
+enum class attack_flags : std::int32_t {
     ground = 0x1,             // 地面目标
     flying_balloon = 0x2,     // 飞行目标（气球）
     lurking_snorkel = 0x4,    // 潜水目标
+    jumping = 0x8,            // 跳跃目标
     animating_zombies = 0x10, // 动画中/特殊动作僵尸
     dying_zombies = 0x20,     // 正在死亡的僵尸
     digging_digger = 0x40,    // 正在挖掘的矿工

@@ -9,7 +9,7 @@
 
 namespace pvz_emulator::object {
 
-enum class zombie_type : std::int8_t {
+enum class zombie_type : std::int32_t {
     none = -1,
     zombie = 0x0,                // 普通僵尸
     flag = 0x1,                  // 摇旗僵尸
@@ -37,13 +37,13 @@ enum class zombie_type : std::int8_t {
     gargantuar = 0x17,           // 巨人僵尸
     imp = 0x18,                  // 小鬼僵尸
     zombie_boss = 0x19,          // 僵尸博士 (TODO)
+    zombie_pea_head = 0x1A,      // 豌豆僵尸 (TODO)
+    zombie_wallnut_head = 0x1B,  // 坚果僵尸 (TODO)
+    zombie_jalapeno_head = 0x1C, // 辣椒僵尸 (TODO)
+    zombie_gatling_head = 0x1D,  // 机枪僵尸 (TODO)
+    zombie_squash_head = 0x1E,   // 倭瓜僵尸 (TODO)
+    zombie_tallnut_head = 0x1F,  // 高坚果僵尸 (TODO)
     giga_gargantuar = 0x20,      // 红眼巨人
-    zombie_pea_head = 0x21,      // 豌豆僵尸 (TODO)
-    zombie_wallnut_head = 0x22,  // 坚果僵尸 (TODO)
-    zombie_jalapeno_head = 0x23, // 辣椒僵尸 (TODO)
-    zombie_gatling_head = 0x24,  // 机枪僵尸 (TODO)
-    zombie_squash_head = 0x25,   // 倭瓜僵尸 (TODO)
-    zombie_tallnut_head = 0x26,  // 高坚果僵尸 (TODO)
 };
 
 enum class zombie_status : std::uint8_t {
