@@ -13,7 +13,7 @@ void zombie_backup_dancer::update(zombie& z) {
     if (z.status == zombie_status::backup_spawning) {
         z.dy = static_cast<float>(round(z.countdown.action * (-4/3)));
 
-        if (z.countdown.action) {
+        if (z.countdown.action != 0) {
             return;
         }
     }
@@ -24,16 +24,16 @@ void zombie_backup_dancer::update(zombie& z) {
 
         switch (next_status) {
         case zombie_status::dancing_walking:
-            reanim.set(z, zombie_reanim_name::anim_walk, reanim_type::repeat, 0);
+            reanim_sys().set(z, zombie_reanim_name::anim_walk, reanim_type::repeat, 0);
             break;
 
         case zombie_status::dancing_armrise1:
-            reanim.set(z, zombie_reanim_name::anim_armraise, reanim_type::repeat, 18);
-            z.reanim.progress = 0.60000002f;
+            reanim_sys().set(z, zombie_reanim_name::anim_armraise, reanim_type::repeat, 18);
+            z.reanim.progress = 0.60000002F;
             break;
 
         default:
-            reanim.set(z, zombie_reanim_name::anim_armraise, reanim_type::repeat, 18);
+            reanim_sys().set(z, zombie_reanim_name::anim_armraise, reanim_type::repeat, 18);
             break;
         }
     }
@@ -46,7 +46,7 @@ void zombie_backup_dancer::init(zombie& z, unsigned int row) {
 
     z.status = zombie_status::dancing_walking;
 
-    reanim.set(z, zombie_reanim_name::anim_armraise, reanim_type::repeat, 12);
+    reanim_sys().set(z, zombie_reanim_name::anim_armraise, reanim_type::repeat, 12);
 
     set_common_fields(z);
 }

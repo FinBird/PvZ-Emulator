@@ -11,7 +11,7 @@ public:
     ice_path(object::scene& s) : scene(s), data(s.ice_path) {}
 
     void update() {
-        for (auto i = 0u; i < scene.rows; i++) {
+        for (auto i = 0U; i < scene.rows; i++) {
             if (data.countdown[i] > 0 && --data.countdown[i] == 0) {
                 data.x[i] = 800;
             }

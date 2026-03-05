@@ -74,15 +74,15 @@ bool world::update(const std::tuple<int, int, int> &action) {
 
     if (row >= 0 && row < scene.rows && col >= 0 && col < 9) {
         if (op == -2) {
-            if (scene.plant_map[row][col].pumpkin) {
+            if (scene.plant_map[row][col].pumpkin != nullptr) {
                 plant_factory.destroy(*scene.plant_map[row][col].pumpkin);
             }
         } else if (op == -1) {
-            if (scene.plant_map[row][col].coffee_bean) {
+            if (scene.plant_map[row][col].coffee_bean != nullptr) {
                 plant_factory.destroy(*scene.plant_map[row][col].coffee_bean);
-            } else if (scene.plant_map[row][col].content) {
+            } else if (scene.plant_map[row][col].content != nullptr) {
                 plant_factory.destroy(*scene.plant_map[row][col].content);
-            } else if (scene.plant_map[row][col].base) {
+            } else if (scene.plant_map[row][col].base != nullptr) {
                 plant_factory.destroy(*scene.plant_map[row][col].base);
             }
         } else {
@@ -128,24 +128,24 @@ void world::get_available_actions(
         }
 
         if (op == -2) {
-            if (scene.plant_map[row][col].pumpkin &&
+            if ((scene.plant_map[row][col].pumpkin != nullptr) &&
                 !scene.plant_map[row][col].pumpkin->is_dead &&
                 !scene.plant_map[row][col].pumpkin->is_smashed)
             {
                 action_masks[i] = 1;
             }
         } else if (op == -1) {
-            if (scene.plant_map[row][col].coffee_bean &&
+            if ((scene.plant_map[row][col].coffee_bean != nullptr) &&
                 !scene.plant_map[row][col].coffee_bean->is_dead &&
                 !scene.plant_map[row][col].coffee_bean->is_smashed)
             {
                 action_masks[i] = 1;
-            } else if (scene.plant_map[row][col].content &&
+            } else if ((scene.plant_map[row][col].content != nullptr) &&
                !scene.plant_map[row][col].content->is_dead &&
                !scene.plant_map[row][col].content->is_smashed)
             {
                 action_masks[i] = 1;
-            } else if (scene.plant_map[row][col].base &&
+            } else if ((scene.plant_map[row][col].base != nullptr) &&
                !scene.plant_map[row][col].base->is_dead &&
                !scene.plant_map[row][col].base->is_smashed)
             {
@@ -235,7 +235,7 @@ bool world::select_plants(
             return false;
         }
 
-        if (unique_set.find(cards[i]) != unique_set.end()) {
+        if (unique_set.contains(cards[i])) {
             return false;
         }
 
@@ -272,7 +272,7 @@ bool world::select_plants(
             } else {
                 scene.cards[i].type = cards[i];
                 scene.cards[i].imitater_type = plant_type::none;
-                scene.cards[i].cold_down = cd.find(cards[i]) == cd.end() ?
+                scene.cards[i].cold_down = !cd.contains(cards[i]) ?
                     0 :
                     cd[cards[i]];
             }
@@ -299,8 +299,8 @@ bool world::plant(object::plant_type type, unsigned int row, unsigned int col) {
 }
 
 bool world::check_build(const check_list &plants) {
-    for (auto& t : plants) {
-        auto& [type, row, col] = t;
+    for (const auto& t : plants) {
+        const auto& [type, row, col] = t;
 
         if (type == plant_type::pumpkin) {
             if (scene.plant_map[row][col].pumpkin == nullptr) {

@@ -17,9 +17,9 @@ void zombie_pole_vaulting::update(zombie &z) {
         bool has_jumped = false;
 
         if (z.reanim.progress > 0.60000002 && z.reanim.progress <= 0.69999999) {
-            auto plant = find_target(z, zombie_attack_type::jump);
+            auto *plant = find_target(z, zombie_attack_type::jump);
             
-            if (plant && plant->type == plant_type::tallnut) {
+            if ((plant != nullptr) && plant->type == plant_type::tallnut) {
                 has_jumped = true;
 
                 z.x = static_cast<float>(plant->x);
@@ -40,21 +40,21 @@ void zombie_pole_vaulting::update(zombie &z) {
             z.attack_box.width = 20;
             z.attack_box.height = 115;
             z.status = zombie_status::pole_vaulting_walking;
-            reanim.update_status(z);
+            reanim_sys().update_status(z);
         } else {
             auto t = z.x;
             z.x -= z.reanim.progress * 150;
-            z.y = zombie_init_y(scene.type, z, z.row);
+            z.y = zombie_init_y(scene().type, z, z.row);
             z.x = t;
         }
     } else {
-        auto plant = find_target(z, zombie_attack_type::jump);
+        auto *plant = find_target(z, zombie_attack_type::jump);
 
         if (plant == nullptr) {
             return;
         }
 
-        for (auto& item : scene.griditems) {
+        for (auto& item : scene().griditems) {
             if (item.col == plant->col &&
                 item.row == plant->row &&
                 item.type == griditem_type::ladder)
@@ -71,7 +71,7 @@ void zombie_pole_vaulting::update(zombie &z) {
         }
 
         z.status = zombie_status::pole_valuting_jumping;
-        reanim.set(z, zombie_reanim_name::anim_jump, reanim_type::once, 24);
+        reanim_sys().set(z, zombie_reanim_name::anim_jump, reanim_type::once, 24);
         z.has_item_or_walk_left = false;
         z.dx = static_cast<float>(
             (static_cast<double>(z.int_x) - static_cast<double>(plant->x) - 80.0) /
@@ -84,7 +84,7 @@ void zombie_pole_vaulting::init(zombie &z, unsigned int row) {
 
     zombie_base::init(z, zombie_type::pole_vaulting, row);
 
-    z.x = static_cast<float>(rng.randint(10) + 870);
+    z.x = static_cast<float>(rng_sys().randint(10) + 870);
 
     z.garlic_tick.a = 6;
 
@@ -97,8 +97,8 @@ void zombie_pole_vaulting::init(zombie &z, unsigned int row) {
     z.attack_box.width = 70;
     z.attack_box.height = 115;
 
-    reanim.set(z, zombie_reanim_name::anim_run, reanim_type::repeat, 0);
-    reanim.update_dx(z);
+    reanim_sys().set(z, zombie_reanim_name::anim_run, reanim_type::repeat, 0);
+    reanim_sys().update_dx(z);
 
     set_common_fields(z);
 }

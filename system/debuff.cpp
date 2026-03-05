@@ -25,7 +25,7 @@ void debuff::set_butter(object::zombie& z) {
         z.countdown.butter = 400;
 
         if (z.master_id != -1) {
-            if (auto master = scene.zombies.get(z.master_id)) {
+            if (auto *master = scene.zombies.get(z.master_id)) {
                 master->master_id = -1;
             }
 

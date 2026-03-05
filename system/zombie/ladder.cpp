@@ -17,9 +17,9 @@ void zombie_ladder::update(object::zombie& z) {
         if (z.status == zombie_status::ladder_placing &&
             z.reanim.n_repeated > 0)
         {
-            if (auto target = find_target(z, zombie_attack_type::place_ladder))
+            if (auto *target = find_target(z, zombie_attack_type::place_ladder))
             {
-                griditem_factory(scene).create(
+                griditem_factory(scene()).create(
                     griditem_type::ladder,
                     target->row,
                     target->col);
@@ -27,16 +27,16 @@ void zombie_ladder::update(object::zombie& z) {
                 z.action = zombie_action::climbing_ladder;
                 z.ladder_col = target->col;
 
-                damage(scene).destroy_accessory_2(z);
+                damage(scene()).destroy_accessory_2(z);
             } else {
                 z.status = zombie_status::ladder_walking;
-                reanim.update_status(z);
+                reanim_sys().update_status(z);
             }
         }
-    } else if (find_target(z, zombie_attack_type::place_ladder)) {
-        damage(scene).unset_is_eating(z);
+    } else if (find_target(z, zombie_attack_type::place_ladder) != nullptr) {
+        damage(scene()).unset_is_eating(z);
         z.status = zombie_status::ladder_placing;
-        reanim.set(z, zombie_reanim_name::anim_placeladder, reanim_type::once, 24);
+        reanim_sys().set(z, zombie_reanim_name::anim_placeladder, reanim_type::once, 24);
     }
 }
 
@@ -55,7 +55,7 @@ void zombie_ladder::init(zombie &z, unsigned int row) {
     z.attack_box.height = 115;
 
     z.status = zombie_status::ladder_walking;
-    reanim.update_status(z);
+    reanim_sys().update_status(z);
 
     set_common_fields(z);
 }

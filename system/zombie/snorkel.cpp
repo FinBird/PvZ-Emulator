@@ -11,17 +11,17 @@ void zombie_snorkel::update(zombie& z) {
     case zombie_status::snorkel_walking:
         if (!z.is_walk_right()) {
             if (z.int_x > 700 && z.int_x <= 720) {
-                z.dx = 0.2f;
+                z.dx = 0.2F;
                 z.status = zombie_status::snorkel_jump_in_the_pool;
 
-                reanim.set(z, zombie_reanim_name::anim_jumpinpool, reanim_type::once, 16);
+                reanim_sys().set(z, zombie_reanim_name::anim_jumpinpool, reanim_type::once, 16);
             }
             return;
         }
 
     case zombie_status::snorkel_jump_in_the_pool: {
         float t = static_cast<float>(
-            static_cast<int>(z.reanim.progress * 1000) / 1000.f);
+            static_cast<int>(z.reanim.progress * 1000) / 1000.F);
 
         if (t > 0) {
             if (t < 1) {
@@ -36,7 +36,7 @@ void zombie_snorkel::update(zombie& z) {
         if (z.reanim.n_repeated > 0) {
             z.status = zombie_status::snorkel_swim;
             z.is_in_water = true;
-            reanim.set(z, zombie_reanim_name::anim_swim, reanim_type::repeat, 12);
+            reanim_sys().set(z, zombie_reanim_name::anim_swim, reanim_type::repeat, 12);
         }
 
         return;
@@ -44,7 +44,7 @@ void zombie_snorkel::update(zombie& z) {
 
     case zombie_status::snorkel_swim:
         if (!z.is_not_dying) {
-            damage(scene).take(
+            damage(scene()).take(
                 z,
                 1800,
                 zombie_damage_flags::ignore_accessory_2 |
@@ -54,28 +54,28 @@ void zombie_snorkel::update(zombie& z) {
         }
 
         if (z.int_x <= 25 && !z.is_walk_right()) {
-            z.dy = -90.0f;
-            z.x -= 15.0f;
+            z.dy = -90.0F;
+            z.x -= 15.0F;
             z.status = zombie_status::snorkel_walking;
             z.action = zombie_action::leaving_pool;
-            reanim.update_status(z);
+            reanim_sys().update_status(z);
 
             return;
         }
 
         if (z.int_x > 640 && z.is_walk_right()) {
-            z.dy = -90.0f;
-            z.x += 15.0f;
+            z.dy = -90.0F;
+            z.x += 15.0F;
             z.status = zombie_status::snorkel_walking;
             z.action = zombie_action::leaving_pool;
-            reanim.update_status(z);
+            reanim_sys().update_status(z);
 
             return;
         }
 
         if (z.is_eating) {
             z.status = zombie_status::snorkel_up_to_eat;
-            reanim.set(z, zombie_reanim_name::anim_uptoeat, reanim_type::once, 24);
+            reanim_sys().set(z, zombie_reanim_name::anim_uptoeat, reanim_type::once, 24);
         }
 
         return;
@@ -84,26 +84,26 @@ void zombie_snorkel::update(zombie& z) {
         if (z.is_eating) {
             if (z.reanim.n_repeated > 0) {
                 z.status = zombie_status::snorkel_eat;
-                reanim.set(z, zombie_reanim_name::anim_eat, reanim_type::repeat, 0);
+                reanim_sys().set(z, zombie_reanim_name::anim_eat, reanim_type::repeat, 0);
             }
         } else {
             z.status = zombie_status::snorkel_finished_eat;
-            reanim.set(z, zombie_reanim_name::anim_uptoeat, reanim_type::once, -24);
+            reanim_sys().set(z, zombie_reanim_name::anim_uptoeat, reanim_type::once, -24);
         }
         return;
 
     case zombie_status::snorkel_eat:
         if (!z.is_eating) {
             z.status = zombie_status::snorkel_finished_eat;
-            reanim.set(z, zombie_reanim_name::anim_uptoeat, reanim_type::once, -24);
+            reanim_sys().set(z, zombie_reanim_name::anim_uptoeat, reanim_type::once, -24);
         }
         return;
 
     case zombie_status::snorkel_finished_eat:
         if (z.reanim.n_repeated > 0) {
             z.status = zombie_status::snorkel_swim;
-            reanim.set(z, zombie_reanim_name::anim_swim, reanim_type::once, 0);
-            reanim.update_dx(z);
+            reanim_sys().set(z, zombie_reanim_name::anim_swim, reanim_type::once, 0);
+            reanim_sys().update_dx(z);
         }
         return;
 

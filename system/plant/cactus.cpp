@@ -19,7 +19,7 @@ void plant_cactus::update(plant& p) {
         break;
 
     case plant_status::cactus_tall_idle:
-        if (!find_target(p, p.row, false)) {
+        if (find_target(p, p.row, false) == nullptr) {
             p.status = plant_status::cactus_get_short;
             p.set_reanim(plant_reanim_name::anim_lower, reanim_type::once, 12);
         }
@@ -33,7 +33,7 @@ void plant_cactus::update(plant& p) {
         break;
 
     default:
-        if (find_target(p, p.row, false)) {
+        if (find_target(p, p.row, false) != nullptr) {
             p.status = plant_status::cactus_grow_tall;
             p.set_reanim(plant_reanim_name::anim_rise, reanim_type::once, 12);
         }

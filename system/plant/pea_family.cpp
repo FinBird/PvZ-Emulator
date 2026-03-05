@@ -11,9 +11,9 @@ void pea_base::init(plant & p, plant_type type, unsigned int row, unsigned int c
 }
 
 void plant_threepeater::set_launch_countdown(plant & p) {
-    if (find_target(p, p.row, false) ||
-        p.row - 1 >= 0 && find_target(p, p.row - 1, false) ||
-        p.row + 1 < scene.get_max_row() && find_target(p, p.row + 1, false))
+    if ((find_target(p, p.row, false) != nullptr) ||
+        (p.row > 0 && find_target(p, p.row - 1, false) != nullptr) ||
+        (p.row + 1 < scene.get_max_row() && find_target(p, p.row + 1, false) != nullptr))
     {
         p.countdown.launch = 35;
     } else {

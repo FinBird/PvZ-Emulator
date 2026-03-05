@@ -452,8 +452,8 @@ void projectile_system::do_other_motion(projectile& proj) {
             float res[2];
 
             get_vector_cos_and_sin(
-                proj.dx + (a2[0] * proj.time_since_created * 0.001000000047497451f),
-                proj.dy2 + (a2[1] * proj.time_since_created * 0.001000000047497451f),
+                proj.dx + (a2[0] * proj.time_since_created * 0.001000000047497451F),
+                proj.dy2 + (a2[1] * proj.time_since_created * 0.001000000047497451F),
                 res[0],
                 res[1]);
 

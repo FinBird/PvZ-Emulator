@@ -1,7 +1,7 @@
+#include <algorithm>
 #include <cmath>
 #include <cassert>
 #include "damage.h"
-#include "system/zombie/zombie.h"
 #include "system/griditem_factory.h"
 
 namespace pvz_emulator::system {
@@ -307,10 +307,7 @@ void damage::take_ash_attack(zombie& z) {
         debuff.remove_freeze(z);
     }
 
-    if (z.countdown.butter > 0) {
-        z.countdown.butter = 0;
-    }
-
+    z.countdown.butter = 0;
     if (z.status != zombie_status::dying &&
         z.status != zombie_status::dying_from_lawnmower &&
         z.status != zombie_status::pole_valuting_jumping &&
@@ -390,8 +387,8 @@ void damage::activate_blover() {
 void damage::activate_plant(object::plant& p) {
     auto flags = p.get_attack_flags();
 
-    int x = p.attack_box.width / 2 + p.x;
-    int y = p.attack_box.height / 2 + p.y;
+    int x = (p.attack_box.width / 2) + p.x;
+    int y = (p.attack_box.height / 2) + p.y;
 
     switch (p.type) {
     case plant_type::blover:
@@ -494,7 +491,7 @@ void damage::activate_plant(object::plant& p) {
     case plant_type::coffee_bean: {
         auto& gs = scene.plant_map[p.row][p.col];
 
-        if (gs.content && gs.content->is_sleeping) {
+        if ((gs.content != nullptr) && gs.content->is_sleeping) {
             gs.content->countdown.awake = 100;
         }
 

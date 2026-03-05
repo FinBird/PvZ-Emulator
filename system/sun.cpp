@@ -8,7 +8,7 @@ using namespace pvz_emulator::object;
 const unsigned int sun::MAX_SUN = 9990;
 
 unsigned int sun::gen_nature_sun_countdown() {
-    int c = data.natural_sun_generated * 10 + 425;
+    int c = (data.natural_sun_generated * 10) + 425;
     return std::min(c, 950) + rng.randint(275);
 }
 

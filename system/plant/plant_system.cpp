@@ -70,9 +70,6 @@ void plant_system::launch(plant& p,
 
     switch (p.type) {
     case plant_type::fumeshroom:
-        damage.range_attack(p, 0x0 | zombie_damage_flags::not_reduce);
-        return;
-
     case plant_type::gloomshroom:
         damage.range_attack(p, 0x0 | zombie_damage_flags::not_reduce);
         return;
@@ -262,11 +259,8 @@ void plant_system::launch(plant& p,
             dist_x = zombie_base(scene).predict_after(*target, 50) - x - 30;
             dist_y = static_cast<double>(zr.y) - y;
 
-            if (target->status == zombie_status::dolphin_ride) {
-                dist_x -= 60;
-            } else if (target->type == zombie_type::pogo &&
-                target->has_item_or_walk_left)
-            {
+            if (target->status == zombie_status::dolphin_ride ||
+                (target->type == zombie_type::pogo && target->has_item_or_walk_left)) {
                 dist_x -= 60;
             } else if (target->status == zombie_status::snorkel_swim) {
                 dist_x -= 40;
@@ -417,7 +411,7 @@ void plant_system::update_launch_countdown(plant& p) {
         }
     }
 
-    if (p.countdown.launch) {
+    if (p.countdown.launch != 0) {
         return;
     }
 

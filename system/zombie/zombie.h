@@ -1,7 +1,5 @@
 #pragma once
 #include <array>
-#include <utility>
-#include <unordered_map>
 
 #include "object/scene.h"
 #include "object/zombie.h"
@@ -13,11 +11,18 @@
 namespace pvz_emulator::system {
 
 class zombie_base {
-protected:
-    object::scene& scene;
+private:
+    object::scene& m_scene;
+    system::reanim m_reanim;
+    system::rng m_rng;
 
-    system::reanim reanim;
-    system::rng rng;
+protected:
+    [[nodiscard]] object::scene& scene() { return m_scene; }
+    [[nodiscard]] const object::scene& scene() const { return m_scene; }
+
+    system::reanim& reanim_sys() { return m_reanim; }
+
+    system::rng& rng_sys() { return m_rng; }
 
     static constexpr unsigned int GARLIC_MOVE_TIME = 170;
 
@@ -35,7 +40,7 @@ public:
 
     long double predict_after(object::zombie& z, float cs);
 
-    zombie_base(object::scene& s) : scene(s), reanim(s), rng(s) {}
+    zombie_base(object::scene& s) : m_scene(s), m_reanim(s), m_rng(s) {}
 };
 
 class common_zombie : public zombie_base {

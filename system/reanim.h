@@ -19,7 +19,7 @@ public:
         float fps);
 
     void set_fps(object::zombie& z, float fps) {
-        z.reanim.fps = is_slowed(scene, z) ? 0.5f * fps : fps;
+        z.reanim.fps = is_slowed(scene, z) ? 0.5F * fps : fps;
     }
 
     void update_dx(object::zombie& z, bool do_update_fps = true);

@@ -73,8 +73,8 @@ void projectile_factory::create(projectile_type type, zombie& z, plant* p) {
     o.motion_type = projectile_motion_type::parabola;
     o.dx = static_cast<float>(-std::max(40.0, o.x - x_end - 20) / 120);
     o.dy2 = 0;
-    o.ddy = static_cast<float>(y_end / 120 - 7);
-    o.dddy = 0.115f;
+    o.ddy = static_cast<float>((y_end / 120) - 7);
+    o.dddy = 0.115F;
 }
 
 projectile& projectile_factory::create(

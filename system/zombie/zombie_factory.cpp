@@ -123,9 +123,9 @@ void zombie_factory::create_roof_lurking(
 
 	b.bungee_col = col;
 	b.row = row;
-	b.x = static_cast<float>(80 * col + 40);
+	b.x = static_cast<float>((80 * col) + 40);
 	b.y = zombie_init_y(scene.type, b, row);
-	b.master_id = static_cast<int>(scene.zombies.get_index(z));
+	b.master_id = scene.zombies.get_index(z);
 	reanim.set(b, zombie_reanim_name::anim_raise, reanim_type::once, 36);
 
 	z.x = b.x - 15;
@@ -142,7 +142,7 @@ void zombie_factory::create_pool_or_night_lurking(
 {
 	auto& z = create(type);
 
-	z.x = static_cast<float>(80 * col + 15);
+	z.x = static_cast<float>((80 * col) + 15);
 	z.y = zombie_init_y(scene.type, z, row);
 	z.int_x = static_cast<int>(z.x);
 	z.int_y = static_cast<int>(z.y);
@@ -186,7 +186,7 @@ void zombie_factory::destroy(object::zombie& z) {
 	z.is_dead = true;
 
 	if (z.type == zombie_type::bungee) {
-        auto p = scene.plants.get(z.bungee_target);
+        auto *p = scene.plants.get(z.bungee_target);
 
 		if (p != nullptr && z.status == zombie_status::bungee_grab) {
 			if (p->edible == plant_edible_status::invisible_and_edible) {
@@ -199,11 +199,11 @@ void zombie_factory::destroy(object::zombie& z) {
 			z.bungee_target = -1;
 		}
 
-		if (auto p = scene.plants.get(z.bungee_target)) {
+		if (auto *p = scene.plants.get(z.bungee_target)) {
 			plant_factory(scene).destroy(*p);
 		}
 
-		if (auto partner = scene.zombies.get(z.master_id)) {
+		if (auto *partner = scene.zombies.get(z.master_id)) {
 			if (!partner->is_dead) {
 				destroy(*partner);
 			}
@@ -300,9 +300,9 @@ unsigned int zombie_factory::get_spawn_row(zombie_type type) {
 
 		float weight = data.row_random[i].b / sigma_b;
 
-		f[i] = (6.0f * data.row_random[i].c * weight + 6.0f * weight - 3.0f) / 4.0f;
-		f[i] += (data.row_random[i].d * weight + weight - 1.0f) / 4.0f;
-		f[i] = weight * std::min(std::max(f[i], 0.01f), 100.0f);
+		f[i] = (6.0F * data.row_random[i].c * weight + 6.0F * weight - 3.0F) / 4.0F;
+		f[i] += (data.row_random[i].d * weight + weight - 1.0F) / 4.0F;
+		f[i] = weight * std::min(std::max(f[i], 0.01F), 100.0F);
 	}
 
 	auto row = rng.random_weighted_sample(f);

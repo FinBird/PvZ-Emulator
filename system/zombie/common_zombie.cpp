@@ -20,16 +20,16 @@ void zombie_base::init(object::zombie &z, zombie_type type, unsigned int row) {
     z.action = zombie_action::none;
 
     z.row = row;
-    z.spawn_wave = scene.spawn.wave;
+    z.spawn_wave = scene().spawn.wave;
 
     z.hp = 270;
 
-    z.x = static_cast<float>(rng.randint(40) + 780);
+    z.x = static_cast<float>(rng_sys().randint(40) + 780);
     if (z.spawn_wave == 9 || z.spawn_wave == 19) {
         z.x += 40;
     }
 
-    z.y = zombie_init_y(scene.type, z, z.row);
+    z.y = zombie_init_y(scene().type, z, z.row);
 
     z.int_x = 0;
     z.int_y = 0;
@@ -90,9 +90,9 @@ void zombie_base::init(object::zombie &z, zombie_type type, unsigned int row) {
     memset(&z.reanim, 0, sizeof(z.reanim));
     z.reanim.prev_progress = -1;
 
-    reanim.update_dx(z, false);
+    reanim_sys().update_dx(z, false);
     z.init_reanim();
-    reanim.update_status(z);
+    reanim_sys().update_status(z);
 }
 
 void zombie_base::set_common_fields(zombie &z) {
@@ -103,17 +103,18 @@ void zombie_base::set_common_fields(zombie &z) {
     z.int_x = static_cast<int>(z.x);
     z.int_y = static_cast<int>(z.y);
 
-    reanim.update_progress(z.reanim);
+    reanim_sys().update_progress(z.reanim);
 }
 
 bool zombie_base::can_attack_plant(zombie& z, plant& p, zombie_attack_type type) {
+    auto& sc = scene();
     if (p.is_squash_attacking() ||
         p.is_smashed ||
         p.edible == plant_edible_status::invisible_and_not_edible ||
         p.is_dead ||
         p.type == plant_type::tangle_kelp ||
         (!z.is_in_water &&
-            (scene.type == scene_type::fog || scene.type == scene_type::pool) &&
+            (sc.type == scene_type::fog || sc.type == scene_type::pool) &&
             (p.row == 2 || p.row == 3)))
     {
         return false;
@@ -125,18 +126,18 @@ bool zombie_base::can_attack_plant(zombie& z, plant& p, zombie_attack_type type)
     }
 
     if (p.type == plant_type::spikeweed || p.type == plant_type::spikerock) {
-        return !(z.type != zombie_type::gargantuar &&
-                 z.type != zombie_type::giga_gargantuar &&
-                 z.type != zombie_type::zomboni &&
-                 !scene.is_water_grid(p.row, p.col) &&
-                 scene.plant_map[p.row][p.col].base == nullptr);
+        return z.type == zombie_type::gargantuar ||
+                 z.type == zombie_type::giga_gargantuar ||
+                 z.type == zombie_type::zomboni ||
+                 scene().is_water_grid(p.row, p.col) ||
+                 scene().plant_map[p.row][p.col].base != nullptr;
     }
 
     switch (type) {
     case zombie_attack_type::smash_or_eat: {
-        auto& gs = scene.plant_map[p.row][p.col];
+        auto& gs = scene().plant_map[p.row][p.col];
 
-        auto other = gs.pumpkin;
+        auto *other = gs.pumpkin;
         if (gs.pumpkin == nullptr) {
             other = gs.content;
             if (gs.content == nullptr) {
@@ -144,9 +145,9 @@ bool zombie_base::can_attack_plant(zombie& z, plant& p, zombie_attack_type type)
             }
         }
 
-        return !(other != nullptr &&
-                 other != &p &&
-                 can_attack_plant(z, *other, zombie_attack_type::smash_or_eat));
+        return other == nullptr ||
+                 other == &p ||
+                 !can_attack_plant(z, *other, zombie_attack_type::smash_or_eat);
     }
 
     case zombie_attack_type::crush:
@@ -158,11 +159,11 @@ bool zombie_base::can_attack_plant(zombie& z, plant& p, zombie_attack_type type)
                 p.type != plant_type::iceshroom) || p.is_sleeping);
 
     case zombie_attack_type::jump: {
-        auto& gp = scene.plant_map[p.row][p.col];
+        auto& gp = scene().plant_map[p.row][p.col];
 
-        return !(gp.content != nullptr &&
-                 gp.content != &p &&
-                 can_attack_plant(z, *gp.content, zombie_attack_type::jump));
+        return gp.content == nullptr ||
+                 gp.content == &p ||
+                 !can_attack_plant(z, *gp.content, zombie_attack_type::jump);
     }
 
     case pvz_emulator::system::zombie_attack_type::place_ladder:
@@ -176,7 +177,7 @@ bool zombie_base::can_attack_plant(zombie& z, plant& p, zombie_attack_type type)
             return false;
         }
 
-        for (auto& item : scene.griditems) {
+        for (auto& item : scene().griditems) {
             if (item.col == p.col &&
                 item.row == p.row &&
                 item.type == griditem_type::ladder)
@@ -197,7 +198,7 @@ plant* zombie_base::find_target(zombie& z, zombie_attack_type type) {
 
     z.get_attack_box(zr);
 
-    for (auto& p : scene.plants) {
+    for (auto& p : scene().plants) {
         if (p.row != z.row) {
             continue;
         }
@@ -253,14 +254,14 @@ long double zombie_base::predict_after(zombie& z, float cs) {
         dx = -dx;
     }
 
-    if (is_not_movable(scene, z)) {
+    if (is_not_movable(scene(), z)) {
         dx = 0;
     }
 
     rect rect;
     z.get_hit_box(rect);
 
-    return rect.x + static_cast<long double>(rect.width) / 2 - dx * cs;
+    return rect.x + (static_cast<long double>(rect.width) / 2) - (dx * cs);
 }
 
 }

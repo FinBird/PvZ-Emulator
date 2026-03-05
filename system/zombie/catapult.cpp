@@ -11,9 +11,9 @@ void zombie_catapult::init(zombie& z, unsigned int row) {
     zombie_base::init(z, zombie_type::catapult, row);
 
     z.hp = 850;
-    z.x = static_cast<float>(rng.randint(10) + 825);
+    z.x = static_cast<float>(rng_sys().randint(10) + 825);
 
-    reanim.set(z, zombie_reanim_name::anim_walk, reanim_type::repeat, 5.5);
+    reanim_sys().set(z, zombie_reanim_name::anim_walk, reanim_type::repeat, 5.5);
 
     z.catapult_or_jackson.n_basketballs = 20;
 
@@ -33,25 +33,25 @@ void zombie_catapult::init(zombie& z, unsigned int row) {
 plant *zombie_catapult::find_target(zombie& z) {
     plant* target = nullptr;
 
-    for (auto& p : scene.plants) {
+    for (auto& p : scene().plants) {
         if (p.row != z.row ||
             p.is_squash_attacking() ||
             p.is_smashed ||
             p.edible == plant_edible_status::invisible_and_not_edible ||
             p.type == plant_type::spikeweed ||
             p.type == plant_type::spikerock ||
-            (target && target->col <= p.col))
+            ((target != nullptr) && target->col <= p.col))
         {
             continue;
         }
 
-        auto& status = scene.plant_map[p.row][p.col];
+        auto& status = scene().plant_map[p.row][p.col];
 
-        if (status.coffee_bean) {
+        if (status.coffee_bean != nullptr) {
             target = status.coffee_bean;
-        } else if (status.content) {
+        } else if (status.content != nullptr) {
             target = status.content;
-        } else if (status.pumpkin) {
+        } else if (status.pumpkin != nullptr) {
             target = status.pumpkin;
         } else {
             target = status.base;
@@ -65,50 +65,54 @@ void zombie_catapult::update(zombie &z) {
     switch (z.status) {
     case zombie_status::walking:
         if (z.x <= 650 &&
-            find_target(z) &&
+            (find_target(z) != nullptr) &&
             z.catapult_or_jackson.n_basketballs > 0)
         {
             z.status = zombie_status::catapult_shoot;
             z.countdown.action = 300;
-            reanim.set(z, zombie_reanim_name::anim_shoot, reanim_type::once, 24);
+            reanim_sys().set(z, zombie_reanim_name::anim_shoot, reanim_type::once, 24);
         }
         return;
 
     case zombie_status::catapult_idle:
-        if (z.countdown.action) {
+        if (z.countdown.action != 0) {
             return;
         }
 
-        if (find_target(z)) {
+        if (find_target(z) != nullptr) {
             z.status = zombie_status::catapult_shoot;
             z.countdown.action = 300;
-            reanim.set(z, zombie_reanim_name::anim_shoot, reanim_type::once, 24);
+            reanim_sys().set(z, zombie_reanim_name::anim_shoot, reanim_type::once, 24);
             return;
         }
 
-        reanim.set(z, zombie_reanim_name::anim_walk, reanim_type::repeat, 6);
+        reanim_sys().set(z, zombie_reanim_name::anim_walk, reanim_type::repeat, 6);
         z.status = zombie_status::walking;
         return;
 
     case zombie_status::catapult_shoot:
         if (z.reanim.is_in_progress(0.54500002)) {
-            auto target = find_target(z);
-            projectile_factory.create(projectile_type::basketball, z, target);
+         if (z.reanim.is_in_progress(0.54500002)) {
+             auto *target = find_target(z);
+             if (target != nullptr) {
+                 projectile_factory.create(projectile_type::basketball, z, target);
+             }
+         }
         }
         
         if (z.reanim.n_repeated > 0) {
             if (z.catapult_or_jackson.n_basketballs > 0) {
                 --z.catapult_or_jackson.n_basketballs;
-                reanim.set(z, zombie_reanim_name::anim_idle, reanim_type::once, 12);
+                reanim_sys().set(z, zombie_reanim_name::anim_idle, reanim_type::once, 12);
                 z.status = zombie_status::catapult_idle;
             } else {
-                reanim.set(z, zombie_reanim_name::anim_walk, reanim_type::repeat, 6);
+                reanim_sys().set(z, zombie_reanim_name::anim_walk, reanim_type::repeat, 6);
                 z.status = zombie_status::walking;
             }
         }
 
         break;
-
+    
     default:
         assert(false);
         break;

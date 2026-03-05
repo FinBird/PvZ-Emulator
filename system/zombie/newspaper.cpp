@@ -9,7 +9,7 @@ void zombie_newspaper::update(zombie& z) {
         z.reanim.n_repeated > 0)
     {
         z.status = zombie_status::newspaper_running;
-        reanim.update_status(z);
+        reanim_sys().update_status(z);
     }
 }
 

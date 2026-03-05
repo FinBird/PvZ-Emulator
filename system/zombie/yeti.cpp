@@ -10,14 +10,14 @@ void zombie_yeti::update(object::zombie& z) {
         z.is_dead ||
         z.has_death_status() ||
         z.status != zombie_status::walking ||
-        z.countdown.action)
+        (z.countdown.action != 0))
     {
         return;
     }
 
     z.status = zombie_status::yeti_escape;
     z.has_item_or_walk_left = false;
-    reanim.update_dx(z);
+    reanim_sys().update_dx(z);
 }
 
 void zombie_yeti::init(zombie& z, unsigned int row) {
@@ -26,7 +26,7 @@ void zombie_yeti::init(zombie& z, unsigned int row) {
     zombie_base::init(z, zombie_type::yeti, row);
 
     z.hp = 1350;
-    z.countdown.action = rng.randint(501) + 1500;
+    z.countdown.action = rng_sys().randint(501) + 1500;
     z.has_item_or_walk_left = true;
 
     z.attack_box.x = 20;

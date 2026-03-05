@@ -321,7 +321,7 @@ void spawn::night_grave_spawn() {
 
 			auto& s = scene.plant_map[row][col];
 
-			if (s.base || s.coffee_bean || s.content || s.pumpkin) {
+			if ((s.base != nullptr) || (s.coffee_bean != nullptr) || (s.content != nullptr) || (s.pumpkin != nullptr)) {
 				weights.push_back(1);
 			} else {
 				weights.push_back(100000);
@@ -380,7 +380,7 @@ void spawn::next_spawn_countdown_update() {
 		if (data.countdown.next_wave == 0) {
 			data.countdown.endgame = 500;
 			for (auto& t : scene.ice_path.countdown) {
-				t = std::min(t, 500u);
+				t = std::min(t, 500U);
 			}
 		}
 
@@ -457,7 +457,7 @@ void spawn::update() {
 
 void spawn::reset() {
     data.wave = 0;
-	data.hp = { 0 };
+	data.hp = { .initial=0 };
 
     data.countdown.next_wave_initial = data.countdown.next_wave = 600;
 	data.countdown.lurking_squad =

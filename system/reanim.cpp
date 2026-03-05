@@ -27,19 +27,19 @@ void reanim::set(zombie &z, zombie_reanim_name name, reanim_type type, float fps
 
 void reanim::update_dx(object::zombie& z, bool do_update_fps) {
     if (z.status == zombie_status::snorkel_swim) {
-        z.dx = 0.30000001f;
+        z.dx = 0.30000001F;
     } else if (z.status == zombie_status::digger_walk_right) {
-        z.dx = 0.12f;
+        z.dx = 0.12F;
     } else if (z.status == zombie_status::yeti_escape) {
-        z.dx = 0.40000001f;
+        z.dx = 0.40000001F;
     } else if (z.type == zombie_type::yeti) {
-        z.dx = 0.40000001f;
+        z.dx = 0.40000001F;
     } else if (z.type == zombie_type::dancing ||
         z.type == zombie_type::backup_dancer ||
         z.type == zombie_type::pogo ||
         z.type == zombie_type::flag)
     {
-        z.dx = 0.44999999f;
+        z.dx = 0.44999999F;
     } else if (z.status == zombie_status::digger_dig ||
         z.status == zombie_status::pole_valuting_running ||
         z.type == zombie_type::football ||
@@ -128,7 +128,7 @@ void reanim::update_fps(zombie& z) {
         return;
     }
 
-    if (z._ground) {
+    if (z._ground != nullptr) {
         float d = z._ground[z.reanim.begin_frame - 1 + z.reanim.n_frames] -
             z._ground[z.reanim.begin_frame];
 

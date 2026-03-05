@@ -1,5 +1,4 @@
 #include <cmath>
-#include <algorithm>
 #include "plant.h"
 #include "system/sun.h"
 #include "system/damage.h"
@@ -228,7 +227,7 @@ void mushroom_base::init(
     }
 }
 void plant_base::set_launch_countdown(object::plant & p, bool is_alt_attack) {
-    auto target = find_target(p, p.row, is_alt_attack);
+    auto *target = find_target(p, p.row, is_alt_attack);
     if (target == nullptr) {
         return;
     }

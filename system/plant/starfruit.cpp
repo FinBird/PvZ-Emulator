@@ -47,14 +47,14 @@ bool plant_starfruit::has_target(object::plant& p) {
 
         auto predict = zombie_base(scene).predict_after(z, static_cast<float>(t));
 
-        if (px < predict + (zr.width / 2) && predict - (zr.width / 2) < px) {
+        if (px < predict + (zr.width / 2.0) && predict - (zr.width / 2.0) < px) {
             return true;
         }
 
-        int x_predict = static_cast<int>(predict + (zr.width / 2) - px);
-        int y_predict = (zr.y + (zr.height / 2) - py);
+        int x_predict = static_cast<int>(predict + (zr.width / 2.0) - px);
+        int y_predict = static_cast<int>(zr.y + (zr.height / 2.0) - py);
 
-        auto deg = atan2(y_predict, x_predict) * 57.2957763671875;
+        auto deg = atan2(static_cast<double>(y_predict), static_cast<double>(x_predict)) * 57.2957763671875;
 
         if (abs(static_cast<int>(p.row) - static_cast<int>(z.row)) >= 2) {
             if (deg > 25 && deg < 35 || deg > -38 && deg < -28) {

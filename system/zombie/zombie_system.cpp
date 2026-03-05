@@ -183,9 +183,9 @@ void zombie_system::update_lurking_dy(zombie &z) {
         dy = z.is_in_water ? -40 : 0;
     } else {
         if (z.is_in_water) {
-            dy = 110 * ratio - 150;
+            dy = (110 * ratio) - 150;
         } else {
-            dy = 200 * ratio - 200;
+            dy = (200 * ratio) - 200;
         }
     }
 
@@ -287,7 +287,7 @@ void zombie_system::set_garlic_row_switch(zombie& z) {
                 break;
 
             default:
-                if (rng.randint(2)) {
+                if (rng.randint(2) != 0U) {
                     --z.row;
                 } else {
                     ++z.row;
@@ -310,7 +310,7 @@ void zombie_system::set_hypno_effect(zombie& z) {
     }
 
     if (z.type == zombie_type::backup_dancer) {
-        if (auto m = scene.zombies.get(z.master_id)) {
+        if (auto *m = scene.zombies.get(z.master_id)) {
             for (int i = 0; i < 4; i++) {
                 if (m->partners[i] == scene.zombies.get_index(z)) {
                     m->partners[i] = -1;
@@ -320,7 +320,7 @@ void zombie_system::set_hypno_effect(zombie& z) {
         }
 
         z.master_id = -1;
-    } else if (auto m = scene.zombies.get(z.master_id)) {
+    } else if (auto *m = scene.zombies.get(z.master_id)) {
         z.master_id = m->master_id = -1;
     }
 }
@@ -330,7 +330,7 @@ void zombie_system::set_garlic_and_hypno_status(zombie& z) {
         return;
     }
 
-    auto p = subsystems.zombie.find_target(z, zombie_attack_type::smash_or_eat);
+    auto *p = subsystems.zombie.find_target(z, zombie_attack_type::smash_or_eat);
 
     if (p == nullptr) {
         return;
@@ -339,7 +339,7 @@ void zombie_system::set_garlic_and_hypno_status(zombie& z) {
     if (p->type == plant_type::hypnoshroom && !p->is_sleeping) {
         plant_factory.destroy(*p);
         set_hypno_effect(z);
-        z.dx = 0.17f;
+        z.dx = 0.17F;
         z.garlic_tick.a = 18;
     } else if (p->type == plant_type::garlic) {
         z.has_eaten_garlic = true;
@@ -398,7 +398,7 @@ void zombie_system::update_garlic_and_hypno_effect(zombie& z) {
 }
 
 void zombie_system::update_climb_ladder(zombie& z) {
-    int col = std::max(0, get_col_by_x(static_cast<int>(z.dy * 0.5 + z.int_x + 5)));
+    int col = std::max(0, get_col_by_x(static_cast<int>((z.dy * 0.5) + z.int_x + 5)));
 
     for (auto& item : scene.griditems) {
         if (item.col != col ||
@@ -445,7 +445,7 @@ void zombie_system::update_action_in_pool(zombie& z) {
         if (z.dy >= 0) {
             z.dy = 0;
             z.action = zombie_action::none;
-            z.is_in_water = 0;
+            z.is_in_water = false;
         }
         break;
 
@@ -660,14 +660,14 @@ void zombie_system::update_eating(object::zombie& z) {
     {
         int op = z.countdown.slow > 0 ? 8 : 4;
         if (z.time_since_spawn % op == 0) {
-            if (auto enemy = find_hypno_enemy(z)) {
+            if (auto *enemy = find_hypno_enemy(z)) {
                 damage.take(*enemy, 4,
                     zombie_damage_flags::no_flash |
                     zombie_damage_flags::ignore_accessory_2);
 
                 damage.set_is_eating(z);
             } else {
-                auto target = subsystems.zombie.find_target(
+                auto *target = subsystems.zombie.find_target(
                     z, zombie_attack_type::smash_or_eat);
 
                 if (z.is_hypno || target == nullptr) {
@@ -698,13 +698,11 @@ void zombie_system::update_water_status(zombie& z) {
         return;
     }
 
-    bool current_in_water;
+    bool current_in_water = false;
     if (scene.is_water_grid(z.row, get_col_by_x(z.int_x + 75)) &&
         scene.is_water_grid(z.row, get_col_by_x(z.int_x + 45)))
     {
         current_in_water = z.int_x < 680;
-    } else {
-        current_in_water = false;
     }
 
     if (z.is_in_water) {

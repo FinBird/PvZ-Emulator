@@ -24,9 +24,9 @@ float get_y_by_col(scene_type s, unsigned int row, unsigned int col) {
         float offset = static_cast<float>(col < 5 ? 20 * (5 - col) : 0);
         y = (85 * row + offset + 80) - 10;
     } else if (s == scene_type::fog || s == scene_type::pool) {
-        y = static_cast<float>(85 * row + 80);
+        y = static_cast<float>((85 * row) + 80);
     } else {
-        y = static_cast<float>(100 * row + 80);
+        y = static_cast<float>((100 * row) + 80);
     }
 
     return y;
@@ -35,7 +35,7 @@ float get_y_by_col(scene_type s, unsigned int row, unsigned int col) {
 float get_y_by_row_and_x(scene_type s, unsigned int row, float x) {
     if (s == scene_type::roof || s == scene_type::moon_night) {
         float offset = static_cast<float>(x < 440 ?
-            (440.0f - static_cast<long double>(x)) * 0.25 :
+            (440.0F - static_cast<long double>(x)) * 0.25 :
             0);
         return get_y_by_col(s, row, 8) + offset;
     } else {
@@ -45,11 +45,11 @@ float get_y_by_row_and_x(scene_type s, unsigned int row, float x) {
 
 int get_y_by_row_and_col(scene_type s, int row, int col) {
     if (s == scene_type::roof || s == scene_type::moon_night) {
-        return 85 * row + (col < 5 ? 20 * (5 - col) : 0) + 70;
+        return (85 * row) + (col < 5 ? 20 * (5 - col) : 0) + 70;
     } else if (s == scene_type::fog || s == scene_type::pool) {
-        return 85 * row + 80;
+        return (85 * row) + 80;
     } else {
-        return 100 * row + 80;
+        return (100 * row) + 80;
     }
 }
 
@@ -122,8 +122,8 @@ bool is_slowed(scene &scene, zombie &z) {
     }
 
     for (auto i : p->partners) {
-        auto t = scene.zombies.get(i);
-        if (t && t->countdown.slow > 0) {
+        auto *t = scene.zombies.get(i);
+        if ((t != nullptr) && t->countdown.slow > 0) {
             return true;
         }
     }
@@ -183,9 +183,9 @@ bool is_not_movable(scene& scene, zombie& z) {
     }
 
     for (auto i : p->partners) {
-        auto t = scene.zombies.get(i);
+        auto *t = scene.zombies.get(i);
 
-        if (t && (t->is_eating ||
+        if ((t != nullptr) && (t->is_eating ||
             t->countdown.butter > 0 ||
             t->countdown.freeze > 0))                
         {
@@ -209,7 +209,7 @@ bool is_target_of_kelp(scene &s, const zombie &z) {
 
     for (int i = 0; i < 9; i++) {
         auto *plant = s.plant_map[z.row][i].content;
-        if (plant &&
+        if ((plant != nullptr) &&
             plant->type == plant_type::tangle_kelp &&
             plant->target == s.zombies.get_index(z))
         {

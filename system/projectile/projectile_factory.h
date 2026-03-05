@@ -5,7 +5,6 @@
 #include "object/zombie.h"
 #include "object/projectile.h"
 #include "system/rng.h"
-#include "system/util.h"
 
 namespace pvz_emulator::system {
 

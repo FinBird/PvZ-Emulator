@@ -11,7 +11,7 @@ using namespace pvz_emulator::object;
 void zombie_gargantuar::set_walk(zombie& z) {
     if (z.reanim.n_repeated > 0) {
         z.status = zombie_status::walking;
-        reanim.update_status(z);
+        reanim_sys().update_status(z);
     }
 }
 
@@ -23,12 +23,12 @@ void zombie_gargantuar::update(zombie& z) {
             return;
         }
 
-        if (auto target = find_target(z, zombie_attack_type::smash_or_eat)) {
+        if (auto *target = find_target(z, zombie_attack_type::smash_or_eat)) {
             if (target->type == plant_type::spikerock) {
-                damage(scene).take(z, 20,
+                damage(scene()).take(z, 20,
                     static_cast<unsigned int >(zombie_damage_flags::spike));
 
-                plant_spikerock(scene).reduce_life(*target);
+                plant_spikerock(scene()).reduce_life(*target);
 
                 if (target->hp > 0) {
                     set_walk(z);
@@ -36,7 +36,7 @@ void zombie_gargantuar::update(zombie& z) {
                 }
             }
 
-            for (auto& p : scene.plants) {
+            for (auto& p : scene().plants) {
                 if (p.type != plant_type::spikerock &&
                     p.row == target->row &&
                     p.col == target->col)
@@ -46,7 +46,7 @@ void zombie_gargantuar::update(zombie& z) {
                             z.ignored_smashes.arr[z.ignored_smashes.size++] = p.uuid;
                         }
                     } else {
-                        damage(scene).set_smashed(p);
+                        damage(scene()).set_smashed(p);
                     }
                 }
             }
@@ -59,7 +59,7 @@ void zombie_gargantuar::update(zombie& z) {
         if (!z.reanim.is_in_progress(0.74000001)) {
             if (z.reanim.n_repeated > 0) {
                 z.status = zombie_status::walking;
-                reanim.update_status(z);
+                reanim_sys().update_status(z);
             }
 
             return;
@@ -68,37 +68,37 @@ void zombie_gargantuar::update(zombie& z) {
         double d2y = static_cast<double>(z.x) - 360;
         double min_d2y = 40;
 
-        if (scene.type == scene_type::roof ||
-            scene.type == scene_type::moon_night)
+        if (scene().type == scene_type::roof ||
+            scene().type == scene_type::moon_night)
         {
             d2y -= 180;
         }
 
         if (min_d2y <= d2y) {
             if (d2y > 140) {
-                d2y -= rng.randfloat(0, 100);
+                d2y -= rng_sys().randfloat(0, 100);
             }
         } else {
             d2y = min_d2y;
         }
 
         z.has_item_or_walk_left = false;
-        if (!scene.disable_garg_throw_imp) {
-            auto& imp = zombie_factory(scene).create(zombie_type::imp);
+        if (!scene().disable_garg_throw_imp) {
+            auto& imp = zombie_factory(scene()).create(zombie_type::imp);
             imp.spawn_wave = z.spawn_wave;
 
             imp.row = z.row;
             imp.status = zombie_status::imp_flying;
 
-            imp.x = z.x - 133.0f;
-            imp.y = zombie_init_y(scene.type, z, z.row);
+            imp.x = z.x - 133.0F;
+            imp.y = zombie_init_y(scene().type, z, z.row);
 
-            imp.dx = 3.0f;
-            imp.dy = 88.0f;
-            imp.d2y = static_cast<float>(d2y / 3 * 0.5 * 0.05000000074505806);
+            imp.dx = 3.0F;
+            imp.dy = 88.0F;
+            imp.d2y = static_cast<float>(d2y / 3 * 0.5 * 0.05);
 
-            reanim.set(imp, zombie_reanim_name::anim_thrown, reanim_type::once, 18);
-            reanim.update_progress(imp.reanim);
+            reanim_sys().set(imp, zombie_reanim_name::anim_thrown, reanim_type::once, 18);
+            reanim_sys().update_progress(imp.reanim);
         }
  
         set_walk(z);
@@ -118,16 +118,16 @@ void zombie_gargantuar::update(zombie& z) {
             z.x > 400)
         {
             z.status = zombie_status::gargantuar_throw;
-            reanim.set(z, zombie_reanim_name::anim_throw, reanim_type::once, 24);
+            reanim_sys().set(z, zombie_reanim_name::anim_throw, reanim_type::once, 24);
             return;
         }
 
-        if (auto p = find_target(z, zombie_attack_type::smash_or_eat)) {
+        if (auto *p = find_target(z, zombie_attack_type::smash_or_eat)) {
             if (z.attempted_smashes.size < 64) {
                 z.attempted_smashes.arr[z.attempted_smashes.size++] = p->uuid;
             }
             z.status = zombie_status::gargantuar_smash;
-            reanim.set(z, zombie_reanim_name::anim_smash, reanim_type::once, 16);
+            reanim_sys().set(z, zombie_reanim_name::anim_smash, reanim_type::once, 16);
         }
     }
 }
@@ -142,7 +142,7 @@ void zombie_gargantuar::init(zombie& z, zombie_type type, unsigned int row) {
 
     z.hp = z.type == zombie_type::gargantuar ? 3000 : 6000;
 
-    z.x = static_cast<float>(rng.randint(10) + 845);
+    z.x = static_cast<float>(rng_sys().randint(10) + 845);
 
     z.hit_box.x = -17;
     z.hit_box.y = -38;

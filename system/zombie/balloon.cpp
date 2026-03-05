@@ -9,7 +9,7 @@ void zombie_balloon::update(zombie& z) {
         z.reanim.n_repeated > 0)
     {
         z.status = zombie_status::balloon_walking;
-        reanim.update_status(z);
+        reanim_sys().update_status(z);
     }
 }
 
@@ -21,7 +21,7 @@ void zombie_balloon::init(zombie &z, unsigned int row) {
     z.dy = 25;
     z.status = zombie_status::balloon_flying;
 
-    reanim.set(z, zombie_reanim_name::anim_idle, reanim_type::repeat, z.reanim.fps);
+    reanim_sys().set(z, zombie_reanim_name::anim_idle, reanim_type::repeat, z.reanim.fps);
     
     z.hit_box.x = 36;
     z.hit_box.y = 30;

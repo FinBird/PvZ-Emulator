@@ -13,7 +13,7 @@ void zombie_pogo::remove_stick(zombie& z) {
     z.action = zombie_action::falling;
     z.status = zombie_status::walking;
 
-    reanim.update_status(z);
+    reanim_sys().update_status(z);
 
     z.hit_box.x = 36;
     z.hit_box.y = 17;
@@ -54,13 +54,13 @@ void zombie_pogo::update(object::zombie& z) {
             b = 170;
         }
     } else {
-        b = (static_cast<int>(z.status) -
-            static_cast<int>(zombie_status::pogo_idle_before_target)) * 20 + 50;
+        b = ((static_cast<int>(z.status) -
+            static_cast<int>(zombie_status::pogo_idle_before_target)) * 20) + 50;
     }
 
-    float dy = 1 - fabs(1.0f - 2.0f * ((80.0f - z.countdown.action) / 80.0f));
-    dy = 2 * dy - dy * dy;
-    dy = b * dy + 9;
+    float dy = 1 - fabs(1.0F - (2.0F * ((80.0F - z.countdown.action) / 80.0F)));
+    dy = (2 * dy) - (dy * dy);
+    dy = (b * dy) + 9;
 
     z.dy = dy;
 
@@ -72,16 +72,14 @@ void zombie_pogo::update(object::zombie& z) {
     if (z.status == zombie_status::pogo_jump_across &&
         z.countdown.action == 70)
     {
-        auto target = find_target(z, zombie_attack_type::jump);
-
-        if (target && target->type == plant_type::tallnut) {
+        if (auto *target = find_target(z, zombie_attack_type::jump); target != nullptr && target->type == plant_type::tallnut) {
             remove_stick(z);
             return;
         }
     }
 
     if (z.countdown.action == 0) {
-        if (auto target = find_target(z, zombie_attack_type::jump)) {
+        if (auto *target = find_target(z, zombie_attack_type::jump)) {
             if (z.status == zombie_status::pogo_idle_before_target) {
                 z.status = zombie_status::pogo_jump_across;
                 z.countdown.action = 80;
@@ -93,7 +91,7 @@ void zombie_pogo::update(object::zombie& z) {
             }
         } else {
             z.status = zombie_status::pogo_with_stick;
-            reanim.update_dx(z);
+            reanim_sys().update_dx(z);
             z.countdown.action = 80;
         }
     }
@@ -107,7 +105,7 @@ void zombie_pogo::init(zombie &z, unsigned int row) {
     z.hp = 500;
 
     z.status = zombie_status::pogo_with_stick;
-    z.countdown.action = rng.randint(80) + 1;
+    z.countdown.action = rng_sys().randint(80) + 1;
 
     z.attack_box.x = 10;
     z.attack_box.y = 0;
@@ -116,7 +114,7 @@ void zombie_pogo::init(zombie &z, unsigned int row) {
 
     z.has_item_or_walk_left = true;
 
-    reanim.set(z, zombie_reanim_name::anim_pogo, reanim_type::once, 40);
+    reanim_sys().set(z, zombie_reanim_name::anim_pogo, reanim_type::once, 40);
     z.reanim.progress = 1;
 
     set_common_fields(z);
