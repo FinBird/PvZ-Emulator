@@ -11,10 +11,8 @@ using namespace pvz_emulator::object;
 
 void plant_squash::kill(plant& p) {
     auto flags = p.get_attack_flags();
-    
     rect pr;
     p.get_attack_box(pr);
-
     damage damage(scene);
 
     for (auto& z : scene.zombies) {
@@ -24,10 +22,9 @@ void plant_squash::kill(plant& p) {
 
         rect zr;
         z.get_hit_box(zr);
-
         auto d = pr.get_overlap_len(zr);
 
-        if (d > (z.type == zombie_type::football ? -20 : 0)) {
+        if (d > static_cast<float>(z.type == zombie_type::football ? -20 : 0)) {
             damage.take(z, 1800,
                 zombie_damage_flags::disable_ballon_pop |
                 zombie_damage_flags::not_reduce);
@@ -39,7 +36,7 @@ zombie* plant_squash::find_target(plant& p) {
     rect pr;
     p.get_attack_box(pr);
 
-    int min_d = 0;
+    int min_range = 9999;
     zombie* target = nullptr;
 
     for (auto &z : scene.zombies) {
@@ -61,13 +58,15 @@ zombie* plant_squash::find_target(plant& p) {
             z.get_hit_box(zr);
 
             if (z.status == zombie_status::pole_valuting_running &&
-                zr.x < p.x + 20)
+                zr.x >= p.x + 20)
             {
                 continue;
             }
 
-            int d = z.is_eating ? 110 : 70;
-            if (-pr.get_overlap_len(zr) > d) {
+            int overlap_range = -pr.get_overlap_len(zr);
+            int max_range = z.is_eating ? 110 : 70;
+
+            if (overlap_range > max_range) {
                 continue;
             }
 
@@ -82,13 +81,15 @@ zombie* plant_squash::find_target(plant& p) {
                 b -= 60;
             }
 
-            if (!z.is_walk_right() && zr.width + zr.x < b) {
-                continue;
-            }
+            if (z.is_walk_right() || zr.width + zr.x >= b) {
+                if (p.target == scene.zombies.get_index(z)) {
+                    return &z;
+                }
 
-            if (target == nullptr || d < min_d) {
-                min_d = d;
-                target = &z;
+                if (target == nullptr || overlap_range < min_range) {
+                    min_range = overlap_range;
+                    target = &z;
+                }
             }
         }
     }
@@ -97,16 +98,15 @@ zombie* plant_squash::find_target(plant& p) {
 }
 
 int plant_squash::get_jump_up_pos(plant& p, int a, int b) {
-    float r = (50 - p.countdown.status) / 30.0f;
+    float r = (50 - p.countdown.status) / 30.0F;
 
-    if (r <= 0) {
+    if (r <= 0.0F) {
         return a;
-    } else if (r > 1) {
+    } else if (r > 1.0F) {
         return b;
     } else {
-        r = 3 * pow(r, 2) - 2 * pow(r, 3);
-        r = 3 * pow(r, 2) - 2 * pow(r, 3);
-        return static_cast<int>(round((b - a) * r + a));
+        r = (3.0F * r * r) - (2.0F * r * r * r);
+        return static_cast<int>(round(((b - a) * r) + a));
     }
 }
 
@@ -121,23 +121,22 @@ void plant_squash::update(plant& p) {
         if (p.countdown.status == 0) {
             p.set_reanim(plant_reanim_name::anim_jumpup, reanim_type::once, 24);
             p.status = plant_status::squash_jump_up;
-            p.countdown.status = 45;
+            p.countdown.status = 30;
         }
         break;
 
     case plant_status::squash_jump_up:
         if (p.countdown.status == 0) {
-            if (auto z = find_target(p)) {
+            if (auto *z = find_target(p)) {
                 p.cannon.x = static_cast<int>(
                     zombie_base(scene).predict_after(*z, 30) -
-                    p.attack_box.width / 2);
+                    (p.attack_box.width / 2.0F));
+            }
+            p.status = plant_status::squash_stop_in_the_air;
+            p.countdown.status = 50;
 
-                p.status = plant_status::squash_stop_in_the_air;
-                p.countdown.status = 50;
-
-                if (scene.plant_map[p.row][p.col].content == &p) {
-                    scene.plant_map[p.row][p.col].content = nullptr;
-                }
+            if (scene.plant_map[p.row][p.col].content == &p) {
+                scene.plant_map[p.row][p.col].content = nullptr;
             }
         }
         break;
@@ -160,8 +159,13 @@ void plant_squash::update(plant& p) {
         }
         break;
 
-    case plant_status::squash_jump_down:
-        p.y = static_cast<int>(round(120.0 * (10.0 - p.countdown.status) / 10.0 + y - 120));
+
+    case plant_status::squash_jump_down:{
+        float r = (10.0F - p.countdown.status) / 10.0F;
+        r = std::max(0.0F, std::min(1.0F, r));
+        r = (3.0F * r * r) - (2.0F * r * r * r);
+        
+        p.y = static_cast<int>(round(120.0F * r)) + y - 120;
 
         if (p.countdown.status == 5) {
             kill(p);
@@ -171,13 +175,13 @@ void plant_squash::update(plant& p) {
             } else {
                 p.status = plant_status::squash_crushed;
                 p.countdown.status = 100;
-
                 if (scene.plant_map[p.row][p.col].content == &p) {
                     scene.plant_map[p.row][p.col].content = nullptr;
                 }
             }
         }
         break;
+    }
 
     case plant_status::squash_crushed:
         if (p.countdown.status == 0) {
@@ -186,14 +190,12 @@ void plant_squash::update(plant& p) {
         break;
 
     case plant_status::idle:
-        if (auto z = find_target(p)) {
+        if (auto *z = find_target(p)) {
             p.target = scene.zombies.get_index(*z);
-
             rect zr;
             z->get_hit_box(zr);
 
-            p.cannon.x = zr.x + zr.width / 2 - p.attack_box.width / 2;
-
+            p.cannon.x = static_cast<int>(zr.x + (zr.width / 2.0F) - (p.attack_box.width / 2.0F));
             p.status = plant_status::squash_look;
             p.countdown.status = 80;
 
