@@ -23,15 +23,15 @@ observation_factory::observation_factory(
     num_plants(num_plants),
     num_griditems(num_griditems),
     num_projectiles(num_projectiles),
-    num_ice_paths(type == scene_type::night ? 0 :
+    num_ice_paths(type == scene_type::night ? 0 : // TODO: fixit
         type == scene_type::pool || type == scene_type::fog ? 6 : 5),
     single_size(
-        num_zombies * zombie_size +
-        num_plants * plant_size +
-        num_projectiles * projectiles_size +
-        num_griditems * griditems_size +
+        (num_zombies * zombie_size) +
+        (num_plants * plant_size) +
+        (num_projectiles * projectiles_size) +
+        (num_griditems * griditems_size) +
         30 + // Cards
-        2 * num_ice_paths +
+        (2 * num_ice_paths) +
         spawn_flags_size +
         meta_size)
 {}
@@ -155,8 +155,8 @@ void observation_factory::create(
     base += 30;
 
     for (unsigned i = 0; i < num_ice_paths; i++) {
-        base[2 * i + 0] = scene.ice_path.x[i] / 800;
-        base[2 * i + 0] = scene.ice_path.countdown[i] / 3000;
+        base[(2 * i) + 0] = scene.ice_path.x[i] / 800;
+        base[(2 * i) + 0] = scene.ice_path.countdown[i] / 3000;
     }
 
     base += num_ice_paths * 2;

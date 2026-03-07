@@ -137,7 +137,7 @@ void damage::set_death_state(zombie& z, unsigned int flags) {
         z.countdown.freeze = z.countdown.butter = 0;
         z.has_eaten_garlic = z.time_since_ate_garlic = 0;
 
-        if (flags & zombie_damage_flags::disable_ballon_pop &&
+        if (flags & zombie_damage_flags::doesnt_leave_body  &&
             z.type != zombie_type::gargantuar &&
             z.type != zombie_type::giga_gargantuar)
         {
@@ -247,7 +247,7 @@ void damage::destroy_accessory_2(zombie& z) {
 }
 
 void damage::take_body(zombie& z, unsigned int damage, unsigned int flags) {
-    if (flags & zombie_damage_flags::slow_effect) {
+    if (flags & zombie_damage_flags::freeze) {
         debuff.set_slowed(z, 1000);
     }
 
@@ -298,8 +298,8 @@ void damage::take_ash_attack(zombie& z) {
 
     if (z.hp >= 1800) {
         take(z, 1800,
-            zombie_damage_flags::disable_ballon_pop |
-            zombie_damage_flags::not_reduce);
+            zombie_damage_flags::doesnt_leave_body  |
+            zombie_damage_flags::hits_shield_and_body );
         return;
     }
 
@@ -472,7 +472,7 @@ void damage::activate_plant(object::plant& p) {
                 }
 
                 take(z, 20, static_cast<unsigned int>(
-                    zombie_damage_flags::ignore_accessory_2));
+                    zombie_damage_flags::bypasses_shield ));
 
                 reanim.update_fps(z);
             }
@@ -573,8 +573,8 @@ void damage::take_instant_kill(
             } else {
                 take(z,
                     1800,
-                    zombie_damage_flags::disable_ballon_pop |
-                    zombie_damage_flags::not_reduce);
+                    zombie_damage_flags::doesnt_leave_body  |
+                    zombie_damage_flags::hits_shield_and_body );
             }
         }
     }
@@ -618,7 +618,7 @@ void damage::take(object::zombie& z, unsigned int damage, unsigned int flags) {
             d -= 20;
             z.has_balloon = false;
 
-            if (!(flags & zombie_damage_flags::disable_ballon_pop) &&
+            if (!(flags & zombie_damage_flags::doesnt_leave_body ) &&
                 z.status == zombie_status::balloon_flying)
             {
                 z.status = zombie_status::balloon_falling;
@@ -637,11 +637,11 @@ void damage::take(object::zombie& z, unsigned int damage, unsigned int flags) {
     }
 
     if (d > 0 && z.accessory_2.type != zombie_accessories_type_2::none &&
-        !(flags & zombie_damage_flags::ignore_accessory_2))
+        !(flags & zombie_damage_flags::bypasses_shield ))
     {
         auto taken = std::min(z.accessory_2.hp, d);
 
-        if (!(flags & zombie_damage_flags::not_reduce)) {
+        if (!(flags & zombie_damage_flags::hits_shield_and_body )) {
             d -= taken;
         }
 

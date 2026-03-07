@@ -11,13 +11,13 @@
 
 namespace pvz_emulator::system {
 
-enum class zombie_damage_flags : std::uint8_t {
-    ignore_accessory_2 = 0x1,
-    not_reduce = 0x2,
-    slow_effect = 0x4,
-    no_flash = 0x8,
-    disable_ballon_pop = 0x10,
-    spike = 0x20
+enum class zombie_damage_flags : std::int32_t {
+    bypasses_shield = 0x1,       // 绕过护盾 (大喷菇)
+    hits_shield_and_body = 0x2,  // 同时伤害护盾和身体 (火球)
+    freeze = 0x4,                // 冰冻效果
+    doesnt_cause_flash = 0x8,    // 不产生闪烁
+    doesnt_leave_body = 0x10,    // 不留下尸体
+    spike = 0x20                 // 尖刺类型
 };
 
 template <typename T>

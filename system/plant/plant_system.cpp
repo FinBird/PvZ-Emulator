@@ -71,7 +71,7 @@ void plant_system::launch(plant& p,
     switch (p.type) {
     case plant_type::fumeshroom:
     case plant_type::gloomshroom:
-        damage.range_attack(p, 0x0 | zombie_damage_flags::not_reduce);
+        damage.range_attack(p, 0x0 | zombie_damage_flags::hits_shield_and_body );
         return;
 
     case plant_type::starfruit:
@@ -293,7 +293,7 @@ void plant_system::launch(plant& p,
 
     case plant_type::cattail:
         proj.dx = 2;
-        proj.motion_type = projectile_motion_type::cattail;
+        proj.motion_type = projectile_motion_type::homing;
         proj.target = scene.zombies.get_index(*target);
         break;
 

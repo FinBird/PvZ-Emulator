@@ -46,7 +46,7 @@ enum class zombie_type : std::int32_t {
     giga_gargantuar = 0x20,      // 红眼巨人
 };
 
-enum class zombie_status : std::uint8_t {
+enum class zombie_status : std::int32_t {
     walking = 0x0,                         // 步行
     dying = 0x1,                           // 正在死亡
     dying_from_instant_kill = 0x2,         // 瞬间爆发死亡 (如被炸)
@@ -56,6 +56,7 @@ enum class zombie_status : std::uint8_t {
     bungee_idle_after_drop = 0x6,          // 蹦极降落后空闲
     bungee_grab = 0x7,                     // 蹦极抓取
     bungee_raise = 0x8,                    // 蹦极提升
+    bungee_hit_ouchy = 9,                  // TODO:蹦极受伤
     bungee_idle = 0xa,                     // 蹦极待机
     pole_valuting_running = 0xb,           // 撑杆加速跑
     pole_valuting_jumping = 0xc,           // 撑杆跳跃中
@@ -159,7 +160,12 @@ enum class zombie_accessories_type_1 : std::uint8_t {
     roadcone = 0x1,
     bucket = 0x2,
     football_cap = 0x3,
-    miner_hat = 0x4
+    miner_hat = 0x4,
+    redeyes = 0x5,
+    headband = 0x6,
+    bobsled = 0x7,
+    wallnut = 0x8,
+    tallnut = 0x9,
 };
 
 enum class zombie_accessories_type_2 : std::uint8_t {

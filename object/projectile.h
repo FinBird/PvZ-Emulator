@@ -5,17 +5,17 @@
 
 namespace pvz_emulator::object {
 
-enum class projectile_type : std::int8_t {
+enum class projectile_type : std::int32_t {
     none = -1,
     pea = 0x0,         // 豌豆
-    snow_pea = 0x1,    // 寒冰豌豆
+    snow_pea = 0x1,    // 冰豌豆
     cabbage = 0x2,     // 卷心菜
     melon = 0x3,       // 西瓜
     puff = 0x4,        // 孢子（小喷菇）
-    wintermelon = 0x5, // 冰西瓜弹
-    fire_pea = 0x6,    // 火焰豌豆
-    star = 0x7,        // 杨桃子弹（星星）
-    cactus = 0x8,      // 仙人掌刺
+    wintermelon = 0x5, // 冰西瓜
+    fire_pea = 0x6,    // 火豌豆
+    star = 0x7,        // 星星
+    cactus = 0x8,      // 尖刺
     basketball = 0x9,  // 篮球
     kernel = 0xA,      // 玉米粒
     cob_cannon = 0xB,  // 玉米炮弹
@@ -24,13 +24,15 @@ enum class projectile_type : std::int8_t {
 };
 
 enum class projectile_motion_type : std::uint8_t {
-    straight = 0,      // 直线（如豌豆）
-    parabola = 1,      // 抛物线（如投手类）
-    switch_way = 2,    // 换行（绕过障碍？）
-    puff = 5,          // 烟雾（喷击）
-    left_straight = 6, // 向左直线
-    starfruit = 7,     // 杨桃轨道
-    cattail = 9        // 香蒲轨道（追踪）
+    straight = 0,      // 水平向右直线（豌豆）
+    parabola = 1,      // 抛物线（投手）
+    switch_way = 2,    // 三线偏转（三线射手）
+    bee = 3,           // 蜜蜂子弹？
+    bee_backwards = 4, // 反向蜜蜂子弹？
+    puff = 5,          // 水平向右（孢子，一段时间后消失）
+    left_straight = 6, // 水平向左
+    starfruit = 7,     // 斜向运动
+    homing = 9        // 追踪轨道（香蒲）
 };
 
 class scene;

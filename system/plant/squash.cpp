@@ -26,8 +26,8 @@ void plant_squash::kill(plant& p) {
 
         if (d > static_cast<float>(z.type == zombie_type::football ? -20 : 0)) {
             damage.take(z, 1800,
-                zombie_damage_flags::disable_ballon_pop |
-                zombie_damage_flags::not_reduce);
+                zombie_damage_flags::doesnt_leave_body  |
+                zombie_damage_flags::hits_shield_and_body );
         }
     }
 }

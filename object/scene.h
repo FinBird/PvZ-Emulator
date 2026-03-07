@@ -27,7 +27,7 @@ struct grid_plant_status {
         coffee_bean(nullptr) {}
 };
 
-enum class scene_type : std::uint8_t {
+enum class scene_type : std::int32_t {
     day = 0x0,        // 白天
     night = 0x1,      // 夜晚
     pool = 0x2,       // 泳池

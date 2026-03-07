@@ -15,6 +15,14 @@ scene_type str_to_scene_type(const std::string& str) {
         return scene_type::roof;
     } else if (str == "ME") {
         return scene_type::moon_night;
+    } else if (str == "MG") {
+        return scene_type::mushroom;
+    } else if (str == "WT") {
+        return scene_type::treeofwisdom;
+    } else if (str == "AQ") {
+        return scene_type::zombiquarium;
+    } else if (str == "GR") {
+        return scene_type::greenhouse;
     } else {
         assert(false && "unreachable");
     }
@@ -40,6 +48,8 @@ std::string scene_type_to_str(scene_type scene) {
         return "WT";
     case scene_type::zombiquarium:
         return "AQ";
+    case scene_type::greenhouse:
+        return "GR";
     default:
         assert(false && "unreachable");
         return {}; // 抑制编译警告

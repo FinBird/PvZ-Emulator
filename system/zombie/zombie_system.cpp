@@ -217,8 +217,8 @@ void zombie_system::update_near_death(zombie& z) {
             damage.take(
                 z,
                 d,
-                zombie_damage_flags::ignore_accessory_2 |
-                zombie_damage_flags::no_flash);
+                zombie_damage_flags::bypasses_shield  |
+                zombie_damage_flags::doesnt_cause_flash );
         }
     }
 }
@@ -662,8 +662,8 @@ void zombie_system::update_eating(object::zombie& z) {
         if (z.time_since_spawn % op == 0) {
             if (auto *enemy = find_hypno_enemy(z)) {
                 damage.take(*enemy, 4,
-                    zombie_damage_flags::no_flash |
-                    zombie_damage_flags::ignore_accessory_2);
+                    zombie_damage_flags::doesnt_cause_flash  |
+                    zombie_damage_flags::bypasses_shield );
 
                 damage.set_is_eating(z);
             } else {
@@ -759,8 +759,8 @@ bool zombie_system::update_entering_home(object::zombie& z) {
     }
 
     if (z.int_x < threshold + 70 && !z.is_not_dying) {
-        damage.take(z, 1800, zombie_damage_flags::ignore_accessory_2 |
-            zombie_damage_flags::no_flash);
+        damage.take(z, 1800, zombie_damage_flags::bypasses_shield  |
+            zombie_damage_flags::doesnt_cause_flash );
     }
 
     return false;

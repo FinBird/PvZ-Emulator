@@ -31,7 +31,7 @@ void plant_torchwood::update(plant & p) {
                     proj.type = projectile_type::fire_pea;
                 } else if (proj.type == projectile_type::snow_pea) {
                     proj.type = projectile_type::pea;
-                    proj.flags &= ~(static_cast<unsigned int>(zombie_damage_flags::slow_effect));
+                    proj.flags &= ~(static_cast<unsigned int>(zombie_damage_flags::freeze));
                 }
                 proj.last_torchwood_col = static_cast<int>(p.col);
             }

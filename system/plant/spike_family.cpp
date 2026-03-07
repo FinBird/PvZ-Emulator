@@ -8,7 +8,7 @@ using namespace pvz_emulator::object;
 
 void plant_spikeweed::attack(plant& p) {
     damage(scene).range_attack(p,
-        zombie_damage_flags::spike | zombie_damage_flags::ignore_accessory_2);
+        zombie_damage_flags::spike | zombie_damage_flags::bypasses_shield );
     set_idle_reanim(p);
 }
 

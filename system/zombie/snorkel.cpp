@@ -47,8 +47,8 @@ void zombie_snorkel::update(zombie& z) {
             damage(scene()).take(
                 z,
                 1800,
-                zombie_damage_flags::ignore_accessory_2 |
-                zombie_damage_flags::no_flash);
+                zombie_damage_flags::bypasses_shield  |
+                zombie_damage_flags::doesnt_cause_flash );
 
             return;
         }

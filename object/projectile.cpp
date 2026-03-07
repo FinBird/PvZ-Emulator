@@ -42,8 +42,8 @@ void projectile::get_attack_box(rect& r) const {
         break;
 
     case projectile_type::cob_cannon:
-        r.x = attack_box.width / 2 + int_x - 115;
-        r.y = attack_box.height / 2 + int_y - 115;
+        r.x = (attack_box.width / 2) + int_x - 115;
+        r.y = (attack_box.height / 2) + int_y - 115;
         r.height = 230;
         r.width = 230;
         break;
@@ -71,16 +71,16 @@ unsigned int projectile::get_flags_with_zombie(const zombie& z) const {
         motion_type == projectile_motion_type::left_straight ||
         motion_type == projectile_motion_type::starfruit))
     {
-        flags = static_cast<unsigned int>(zombie_damage_flags::ignore_accessory_2);
+        flags = static_cast<unsigned int>(zombie_damage_flags::bypasses_shield );
     } else {
-        flags = static_cast<unsigned int>(zombie_damage_flags::not_reduce);
+        flags = static_cast<unsigned int>(zombie_damage_flags::hits_shield_and_body );
     }
 
 
     if (type == projectile_type::snow_pea ||
         type == projectile_type::wintermelon)
     {
-        flags = flags | zombie_damage_flags::slow_effect;
+        flags = flags | zombie_damage_flags::freeze;
     }
 
     return flags;
@@ -143,23 +143,23 @@ void projectile::to_json(
 
     writer.Key("flags");
     writer.StartObject();
-    writer.Key("disable_ballon_pop");
-    writer.Bool(flags & zombie_damage_flags::disable_ballon_pop);
+    writer.Key("doesnt_leave_body");
+    writer.Bool((flags & zombie_damage_flags::doesnt_leave_body) != 0u );
 
-    writer.Key("ignore_accessory_2");
-    writer.Bool(flags & zombie_damage_flags::ignore_accessory_2);
+    writer.Key("bypasses_shield");
+    writer.Bool((flags & zombie_damage_flags::bypasses_shield) != 0u );
 
-    writer.Key("not_reduce");
-    writer.Bool(flags & zombie_damage_flags::not_reduce);
+    writer.Key("hits_shield_and_body");
+    writer.Bool((flags & zombie_damage_flags::hits_shield_and_body) != 0u );
 
-    writer.Key("no_flash");
-    writer.Bool(flags & zombie_damage_flags::no_flash);
+    writer.Key("doesnt_cause_flash");
+    writer.Bool((flags & zombie_damage_flags::doesnt_cause_flash) != 0u );
 
-    writer.Key("slow_effect");
-    writer.Bool(flags & zombie_damage_flags::slow_effect);
+    writer.Key("freeze");
+    writer.Bool((flags & zombie_damage_flags::freeze) != 0U);
 
     writer.Key("spike");
-    writer.Bool(flags & zombie_damage_flags::spike);
+    writer.Bool((flags & zombie_damage_flags::spike) != 0U);
     writer.EndObject();
 
     writer.Key("time_since_created");
@@ -209,6 +209,7 @@ const char* projectile::type_to_string(projectile_type type) {
     case projectile_type::kernel: return "kernel";
     case projectile_type::cob_cannon: return "cob_cannon";
     case projectile_type::butter: return "butter";
+    case projectile_type::zombie_pea: return "zombie_pea";
     default:
         return nullptr;
     }
@@ -220,10 +221,12 @@ const char* projectile::motion_type_to_string(projectile_motion_type type)
     case projectile_motion_type::straight: return "straight";
     case projectile_motion_type::parabola: return "parabola";
     case projectile_motion_type::switch_way: return "switch_way";
+    case projectile_motion_type::bee: return "bee";           
+    case projectile_motion_type::bee_backwards: return "bee_backwards";
     case projectile_motion_type::puff: return "puff";
     case projectile_motion_type::left_straight: return "left_straight";
     case projectile_motion_type::starfruit: return "starfruit";
-    case projectile_motion_type::cattail: return "cattail";
+    case projectile_motion_type::homing: return "homing";
     default:
         return nullptr;
     }

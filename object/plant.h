@@ -131,14 +131,14 @@ enum class plant_status : std::uint8_t {
 };
 
 enum class attack_flags : std::int32_t {
-    ground = 0x1,             // 地面目标
-    flying_balloon = 0x2,     // 飞行目标（气球）
-    lurking_snorkel = 0x4,    // 潜水目标
-    jumping = 0x8,            // 跳跃目标
-    animating_zombies = 0x10, // 动画中/特殊动作僵尸
-    dying_zombies = 0x20,     // 正在死亡的僵尸
-    digging_digger = 0x40,    // 正在挖掘的矿工
-    hypno_zombies = 0x80      // 被魅惑的僵尸
+    ground = 1 << 0,             // 地面目标
+    flying_balloon = 1 << 1,     // 飞行目标（气球）
+    lurking_snorkel = 1 << 2,    // 潜水目标
+    jumping = 1 << 3,            // 跳跃目标
+    animating_zombies = 1 << 4, // 动画中/特殊动作僵尸
+    dying_zombies = 1 << 5,     // 正在死亡的僵尸
+    digging_digger = 1 << 6,    // 正在挖掘的矿工
+    hypno_zombies = 1 << 7      // 被魅惑的僵尸
 };
 
 template <typename T>

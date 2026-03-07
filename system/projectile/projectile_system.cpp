@@ -360,7 +360,7 @@ void projectile_system::others_do_attack(projectile& proj) {
         return;
     }
 
-    if (proj.motion_type == projectile_motion_type::cattail) {
+    if (proj.motion_type == projectile_motion_type::homing) {
         auto *z = scene.zombies.get(proj.target);
 
         if (z != nullptr && damage.can_be_attacked(*z, proj.flags)) {
@@ -432,7 +432,7 @@ void projectile_system::do_other_motion(projectile& proj) {
         proj.x -= 3.329999923706055F;
         break;
 
-    case projectile_motion_type::cattail: {
+    case projectile_motion_type::homing: {
         auto *z = scene.zombies.get(proj.target);
 
         if (z != nullptr && damage.can_be_attacked(*z, proj.flags)) {
